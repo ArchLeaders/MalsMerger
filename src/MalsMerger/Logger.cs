@@ -5,7 +5,7 @@ namespace MalsMerger;
 
 public enum LogLevel
 {
-    None, Default, Info, Warn, Error
+    None, Info, OK, Warn, Error
 }
 
 public static class Logger
@@ -82,12 +82,12 @@ public static class Logger
         if (level == LogLevel.None) {
             WriteLine(obj.ToString() ?? string.Empty);
         }
-        else if (level == LogLevel.Default) {
-            Console.ForegroundColor = ConsoleColor.Cyan;
+        else if (level == LogLevel.Info) {
+            Console.ForegroundColor = ConsoleColor.Blue;
             WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
-        else if (level == LogLevel.Info && Verbose) {
-            Console.ForegroundColor = ConsoleColor.Blue;
+        else if (level == LogLevel.OK && Verbose) {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.Warn && Verbose) {
