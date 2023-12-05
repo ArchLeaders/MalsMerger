@@ -48,6 +48,9 @@ try {
     foreach (var path in inputFolders) {
         Logger.WriteLine($"Located input path: '{path}'", LogLevel.OK);
     }
+
+    Merger merger = new(inputFolders, outputFolder);
+    merger.Merge();
 }
 catch (Exception ex) {
     Logger.WriteLine(ex, LogLevel.Error);
