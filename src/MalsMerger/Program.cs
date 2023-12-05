@@ -38,6 +38,13 @@ try {
     string outputFolder = args[1];
     Logger.WriteLine($"Registered output path: '{outputFolder}'", LogLevel.OK);
 
+#if DEBUG
+    if (Directory.Exists(outputFolder)) {
+        Directory.Delete(outputFolder, true);
+        Logger.WriteLine($"Cleared output: '{outputFolder}'", LogLevel.OK);
+    }
+#endif
+
     foreach (var path in inputFolders) {
         Logger.WriteLine($"Located input path: '{path}'", LogLevel.OK);
     }
