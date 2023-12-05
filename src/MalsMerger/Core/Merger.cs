@@ -1,4 +1,6 @@
-﻿using System.Runtime.CompilerServices;
+﻿using MalsMerger.Core.Mergers;
+using SarcLibrary;
+using System.Runtime.CompilerServices;
 using RootFilePair = System.Collections.Generic.KeyValuePair<string, string>;
 
 namespace MalsMerger.Core;
@@ -9,6 +11,7 @@ public class Merger
     private readonly string _output;
     private readonly Dictionary<string, List<RootFilePair>> _conflicts = [];
     private readonly Dictionary<string, List<string>> _unmatched = [];
+    private readonly Dictionary<string, SarcFile> _merged = [];
 
     public Merger(IEnumerable<string> inputMods, string output)
     {
@@ -40,6 +43,27 @@ public class Merger
                 CopyToOutput(root, file);
             }
         }
+
+        foreach ((var root, var conflictingFiles) in _conflicts.Reverse()) {
+            if (conflictingFiles.Count <= 0) {
+                continue;
+            }
+
+            foreach ((var folder, var file) in conflictingFiles) {
+                _merged[file] = SarcMerger.Merge(
+                    file, GetSarc(root, file), GetSarc(folder, file)
+                );
+            }
+        }
+    }
+
+    private SarcFile GetSarc(string root, string file)
+    {
+        if (!_merged.TryGetValue(file, out SarcFile? sarc)) {
+            sarc = SarcFile.FromBinary(Path.Combine(root, file));
+        }
+
+        return sarc;
     }
 
     private void LogResults()
