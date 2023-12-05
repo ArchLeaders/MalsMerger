@@ -9,4 +9,10 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MessageStudio.Core" Version="0.1.0-beta" />
+    <PackageReference Include="SarcLibrary" Version="2.0.2" />
+    <PackageReference Include="ZstdSharp.Port" Version="0.7.4" />
+  </ItemGroup>
+
 </Project>
