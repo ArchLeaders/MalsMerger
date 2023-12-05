@@ -1,4 +1,5 @@
 ﻿using MalsMerger;
+using MalsMerger.Core;
 
 try {
     Logger.Triforce("TotK Mals Merger");
@@ -7,18 +8,22 @@ try {
         Logger.WriteLine(Const.Help, LogLevel.None);
     }
 
-    string[]? inputFolders = null;
-
-    if (args[0].Contains('|')) {
-        if ((inputFolders = args[0].Split('|')).Any(x => !Directory.Exists(x))) {
-            throw new ArgumentException("Invalid input folders!");
+    List<string> inputFolders = [];
+    foreach (var inputFolder in args[0].Split('|')) {
+        string folder = inputFolder;
+        if (Validator.IsValidMalsFolder(ref folder)) {
+            inputFolders.Add(folder);
         }
     }
-    else if (!Directory.Exists(args[0])) {
-        throw new ArgumentException("Invalid input folder!");
+
+    if (inputFolders.Count <= 0) {
+        throw new ArgumentException("Invalid input folders!");
     }
 
-    inputFolders ??= [args[0]];
+    if (inputFolders.Count <= 1) {
+        Logger.WriteLine("No point merging one folder...", LogLevel.None);
+        return;
+    }
 
     Flags flags = Flags.Parse(args[2..]);
 
@@ -30,8 +35,8 @@ try {
         Logger.CreateLogFile(logFile);
     }
 
-    string outputPath = args[1];
-    Logger.WriteLine($"Registered output path: '{outputPath}'", LogLevel.OK);
+    string outputFolder = args[1];
+    Logger.WriteLine($"Registered output path: '{outputFolder}'", LogLevel.OK);
 
     foreach (var path in inputFolders) {
         Logger.WriteLine($"Located input path: '{path}'", LogLevel.OK);
