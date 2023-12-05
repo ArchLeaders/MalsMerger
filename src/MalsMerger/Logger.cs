@@ -77,7 +77,7 @@ public static class Logger
         LogFile?.Dispose();
     }
 
-    public static void WriteLine(object obj, LogLevel level)
+    public static void WriteLine(object obj, LogLevel level = LogLevel.None)
     {
         if (level == LogLevel.None) {
             WriteLine(obj.ToString() ?? string.Empty);
@@ -87,7 +87,6 @@ public static class Logger
             WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.OK && Verbose) {
-            Console.ForegroundColor = ConsoleColor.Cyan;
             WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.Warn && Verbose) {
