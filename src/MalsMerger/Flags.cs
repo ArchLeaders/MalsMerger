@@ -2,7 +2,7 @@
 
 public class Flags
 {
-    private readonly Dictionary<string, string> _flags = new();
+    private readonly Dictionary<string, string> _flags = [];
 
     public static Flags Parse(string[] args)
     {
