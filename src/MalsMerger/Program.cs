@@ -1,5 +1,6 @@
 ﻿using MalsMerger;
 using MalsMerger.Core;
+using MalsMerger.Core.Extensions;
 
 try {
     Logger.Triforce("TotK Mals Merger");
@@ -11,7 +12,7 @@ try {
     List<string> inputFolders = [];
     foreach (var inputFolder in args[0].Split('|')) {
         string folder = inputFolder;
-        if (Validator.IsValidMalsFolder(ref folder)) {
+        if (ValidatorExtension.IsValidMalsFolder(ref folder)) {
             inputFolders.Add(folder);
         }
     }
