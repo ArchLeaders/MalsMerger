@@ -10,10 +10,13 @@ public class ZstdExtension
     private readonly Dictionary<string, Decompressor> _decompressors = [];
     private readonly Dictionary<string, Compressor> _compressors = [];
 
-    public ZstdExtension()
+    private static readonly Lazy<ZstdExtension> _shared = new(() => new(TotkConfig.Shared.ZsDicPath));
+    public static ZstdExtension Shared => _shared.Value;
+
+    public ZstdExtension(string zsDicPath)
     {
-        if (File.Exists(TotkConfig.Shared.ZsDicPath)) {
-            Span<byte> data = _defaultDecompressor.Unwrap(File.ReadAllBytes(TotkConfig.Shared.ZsDicPath));
+        if (File.Exists(zsDicPath)) {
+            Span<byte> data = _defaultDecompressor.Unwrap(File.ReadAllBytes(zsDicPath));
             SarcFile sarc = SarcFile.FromBinary(data.ToArray());
 
             foreach ((var file, var fileData) in sarc) {
@@ -41,6 +44,10 @@ public class ZstdExtension
                 if (file.EndsWith($"{key}.zs")) {
                     return decompressor.Unwrap(src);
                 }
+            }
+
+            if (_decompressors.TryGetValue("zs", out Decompressor? common)) {
+                return common.Unwrap(src);
             }
 
             return _defaultDecompressor.Unwrap(src);
