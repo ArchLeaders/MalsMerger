@@ -1,4 +1,5 @@
-﻿using MalsMerger.Core.Mergers;
+﻿using MalsMerger.Core.Extensions;
+using MalsMerger.Core.Mergers;
 using SarcLibrary;
 using System.Runtime.CompilerServices;
 using RootFilePair = System.Collections.Generic.KeyValuePair<string, string>;
@@ -60,7 +61,9 @@ public class Merger
     private SarcFile GetSarc(string root, string file)
     {
         if (!_merged.TryGetValue(file, out SarcFile? sarc)) {
-            sarc = SarcFile.FromBinary(Path.Combine(root, file));
+            string src = Path.Combine(root, file);
+            Span<byte> buffer = ZstdExtension.Shared.TryDecompress(src);
+            sarc = SarcFile.FromBinary(buffer.ToArray());
         }
 
         return sarc;
