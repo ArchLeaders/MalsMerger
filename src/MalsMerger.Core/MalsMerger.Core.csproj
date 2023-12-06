@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MessageStudio.Core" Version="0.1.0-beta" />
     <PackageReference Include="SarcLibrary" Version="2.0.2" />
     <PackageReference Include="Standart.Hash.xxHash" Version="4.0.5" />

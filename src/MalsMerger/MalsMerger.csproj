@@ -10,11 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\" />
-    <EmbeddedResource Include="Resources\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\MalsMerger.Core\MalsMerger.Core.csproj" />
   </ItemGroup>
 
