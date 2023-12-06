@@ -12,9 +12,9 @@ public class ChecksumArchive
     public ChecksumArchive(string version)
     {
         using Stream? stream = Assembly
-            .GetExecutingAssembly()
+            .GetCallingAssembly()
             .GetManifestResourceStream(
-                $"MalsMerger.Resources.{version.Replace(".", string.Empty)}")
+                $"MalsMerger.Core.Resources.{version.Replace(".", string.Empty)}")
                     ?? throw new NotSupportedException(
                         $"The game version {version} is not supported");
 
@@ -32,6 +32,6 @@ public class ChecksumArchive
     {
         Span<ulong> cast = MemoryMarshal.Cast<byte, ulong>(_buffer.Span);
         int half = cast.Length / 2;
-        return cast[half..][cast[..half].BinarySearch(key, Comparer<ulong>.Default)];
+        return cast[half..][cast[..half].IndexOf(key)];
     }
 }
