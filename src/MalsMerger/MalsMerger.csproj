@@ -10,9 +10,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MessageStudio.Core" Version="0.1.0-beta" />
-    <PackageReference Include="SarcLibrary" Version="2.0.2" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.7.4" />
+    <Folder Include="Resources\" />
+    <EmbeddedResource Include="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MalsMerger.Core\MalsMerger.Core.csproj" />
   </ItemGroup>
 
 </Project>

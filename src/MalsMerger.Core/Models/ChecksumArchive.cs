@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace MalsMerger.Core.Helpers;
+namespace MalsMerger.Core.Models;
 
 public class ChecksumArchive
 {

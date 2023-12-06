@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MalsMerger", "MalsMerger\MalsMerger.csproj", "{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MalsMerger", "MalsMerger\MalsMerger.csproj", "{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MalsMerger.Core", "MalsMerger.Core\MalsMerger.Core.csproj", "{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
