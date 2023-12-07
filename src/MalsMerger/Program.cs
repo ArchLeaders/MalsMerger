@@ -47,6 +47,10 @@ try {
     }
 #endif
 
+    MalsCacheExtension.MalsCache = new(TotkConfig.Shared.GamePath);
+    Logger.WriteLine($"Registered MalsCache with game version: " +
+        $"{TotkConfig.Shared.GamePath.TryGetVersion()}", LogLevel.Info);
+
     foreach (var path in inputFolders) {
         Logger.WriteLine($"Located input path: '{path}'", LogLevel.Info);
     }

@@ -18,11 +18,6 @@ public static class ChecksumExtension
         return IsVanillaCore(buffer, sarcFile, Path.Combine(sarcFile, msbtFile).Replace('\\', '/'));
     }
 
-    public static bool IsEntryVanilla(this MsbtEntry entry, string msbtFile, string sarcFile, string label)
-    {
-        return IsVanillaCore(System.Text.Encoding.UTF8.GetBytes(entry.Text + entry.Attribute ?? string.Empty), sarcFile, Path.Combine(sarcFile, msbtFile).Replace('\\', '/') + ':' + label);
-    }
-
     private static bool IsVanillaCore(this byte[] buffer, string sarcFile, string key)
     {
         string? version = null;
