@@ -32,22 +32,22 @@ try {
     Logger.WriteLine("Verbose Logging Enabled", LogLevel.OK);
 
     if (flags.TryGet(out string? logFile, "l", "log") && logFile is not null) {
-        Logger.WriteLine("Logging Enabled", LogLevel.OK);
+        Logger.WriteLine("Logging Enabled", LogLevel.Info);
         Logger.CreateLogFile(logFile);
     }
 
     string outputFolder = args[1];
-    Logger.WriteLine($"Registered output path: '{outputFolder}'", LogLevel.OK);
+    Logger.WriteLine($"Registered output path: '{outputFolder}'", LogLevel.Info);
 
 #if DEBUG
     if (Directory.Exists(outputFolder)) {
         Directory.Delete(outputFolder, true);
-        Logger.WriteLine($"Cleared output: '{outputFolder}'", LogLevel.OK);
+        Logger.WriteLine($"Cleared output: '{outputFolder}'", LogLevel.Info);
     }
 #endif
 
     foreach (var path in inputFolders) {
-        Logger.WriteLine($"Located input path: '{path}'", LogLevel.OK);
+        Logger.WriteLine($"Located input path: '{path}'", LogLevel.Info);
     }
 
     Merger merger = new(inputFolders, outputFolder);
