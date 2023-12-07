@@ -2,7 +2,7 @@
   "profiles": {
     "MalsMerger.ChecksumGenerator": {
       "commandName": "Project",
-      "commandLineArgs": "\"D:\\Games\\Emulation\\RomFS\\Totk\" \"1.0.0|1.1.0|1.1.1|1.1.2|1.2.0|1.2.1\" F:\\Software\\Projects\\Games\\Nintendo\\GPT-Mod-Merger\\MalsMerger\\src\\MalsMerger.Core\\Resources"
+      "commandLineArgs": "\"D:\\Games\\Emulation\\RomFS\\Totk\" \"1.0.0|1.1.0|1.1.1|1.1.2|1.2.0|1.2.1\" F:\\Software\\Projects\\Games\\Nintendo\\TCML\\MalsMerger\\src\\MalsMerger.Core\\Resources"
     }
   }
 }
