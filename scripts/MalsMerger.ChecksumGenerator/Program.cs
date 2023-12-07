@@ -1,7 +1,10 @@
 ﻿using MalsMerger.Core.Extensions;
+using MessageStudio.Formats.BinaryText;
 using SarcLibrary;
 using Standart.Hash.xxHash;
+using System;
 using System.Buffers.Binary;
+using System.Text;
 
 string src = args[0];
 string[] versions = args[1].Split('|');
@@ -18,11 +21,29 @@ foreach (string version in versions) {
     List<ulong> hashes = [];
     foreach (string file in Directory.EnumerateFiles(mals)) {
         string relativePath = Path.GetRelativePath(mals, file);
-        Span<byte> decompressed = zstd.TryDecompress(file);
-        SarcFile sarc = SarcFile.FromBinary(decompressed.ToArray());
+        byte[] decompressed = zstd.TryDecompress(file).ToArray();
+
+        keys.Add(xxHash64.ComputeHash(relativePath.Replace('\\', '/')));
+        hashes.Add(xxHash64.ComputeHash(decompressed));
+
+        SarcFile sarc = SarcFile.FromBinary(decompressed);
         foreach ((var name, var buffer) in sarc) {
-            keys.Add(xxHash64.ComputeHash(Path.Combine(relativePath, name).Replace('\\', '/')));
+            string key = Path.Combine(relativePath, name).Replace('\\', '/');
+            keys.Add(xxHash64.ComputeHash(key));
             hashes.Add(xxHash64.ComputeHash(buffer));
+
+            if (buffer.AsSpan()[..8].SequenceEqual("MsgStdBn"u8)) {
+                Msbt msbt = Msbt.FromBinary(buffer);
+                foreach ((var label, var entry) in msbt) {
+                    string text = entry.Text + entry.Attribute ?? string.Empty;
+                    if (string.IsNullOrEmpty(text)) {
+                        continue;
+                    }
+
+                    keys.Add(xxHash64.ComputeHash(key + ':' + label));
+                    hashes.Add(xxHash64.ComputeHash(System.Text.Encoding.UTF8.GetBytes(text)));
+                }
+            }
         }
     }
 
@@ -38,4 +59,3 @@ foreach (string version in versions) {
         fs.Write(qword);
     }
 }
-
