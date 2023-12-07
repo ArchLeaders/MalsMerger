@@ -29,7 +29,7 @@ try {
 
     Flags flags = Flags.Parse(args[2..]);
 
-    Logger.Verbose = flags.Get(true, "v", "verbose");
+    Logger.Verbose = flags.Get(false, "v", "verbose");
     Logger.WriteLine("Verbose Logging Enabled", LogLevel.OK);
 
     if (flags.TryGet(out string? logFile, "l", "log") && logFile is not null) {
