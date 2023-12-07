@@ -23,7 +23,7 @@ public class MalsCache(string romfs)
     {
         if (!_malsFiles.TryGetValue(malsFile, out SarcFile? mals)) {
             string malsName = Path.GetFileName(malsFile);
-            byte[] buffer = ZstdExtension.Shared.TryDecompress(malsName).ToArray();
+            byte[] buffer = ZstdExtension.Shared.TryDecompress(Path.Combine(_romfs, "Mals", malsName)).ToArray();
             mals = _malsFiles[malsFile] = SarcFile.FromBinary(buffer);
         }
         
