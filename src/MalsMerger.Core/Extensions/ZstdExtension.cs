@@ -70,6 +70,10 @@ public class ZstdExtension
                 }
             }
 
+            if (_compressors.TryGetValue("zs", out Compressor? common)) {
+                return common.Wrap(buffer);
+            }
+
             return _defaultCompressor.Wrap(buffer);
         }
         catch (Exception ex) {
