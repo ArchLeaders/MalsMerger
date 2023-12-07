@@ -51,19 +51,40 @@ public class Merger
             }
 
             foreach ((var folder, var file) in conflictingFiles) {
+                byte[] bufferA = ZstdExtension.Shared.TryDecompress(Path.Combine(root, file)).ToArray();
+                byte[] bufferB = ZstdExtension.Shared.TryDecompress(Path.Combine(folder, file)).ToArray();
+
+                if (bufferA.IsVanilla(file)) {
+                    Logger.WriteLine($"'{Path.Combine(root, file)}' (source) is a vanilla file. (Skipping, conflict takes priority...)", LogLevel.Info);
+                    _merged[file] = GetSarc(bufferB, file);
+                    continue;
+                }
+
+                if (bufferB.IsVanilla(file)) {
+                    Logger.WriteLine($"'{Path.Combine(folder, file)}' (conflict) is a vanilla file. (Skipping, source takes priority...)", LogLevel.Info);
+                    _merged[file] = GetSarc(bufferA, file);
+                    continue;
+                }
+
+                Logger.WriteLine($"Merging ['{Path.Combine(root, file)}' > '{Path.Combine(folder, file)}']", LogLevel.OK);
                 _merged[file] = SarcMerger.Merge(
-                    file, GetSarc(root, file), GetSarc(folder, file)
+                    file, GetSarc(bufferA, file), GetSarc(bufferB, file)
                 );
             }
         }
+
+        foreach ((var file, var sarc) in _merged) {
+            byte[] buffer = sarc.ToBinary();
+            string output = Path.Combine(_output, "Mals", file);
+            using FileStream fs = File.Create(output);
+            fs.Write(ZstdExtension.Shared.TryCompress(file, buffer));
+        }
     }
 
-    private SarcFile GetSarc(string root, string file)
+    private SarcFile GetSarc(byte[] buffer, string file)
     {
         if (!_merged.TryGetValue(file, out SarcFile? sarc)) {
-            string src = Path.Combine(root, file);
-            Span<byte> buffer = ZstdExtension.Shared.TryDecompress(src);
-            sarc = SarcFile.FromBinary(buffer.ToArray());
+            sarc = SarcFile.FromBinary(buffer);
         }
 
         return sarc;
@@ -81,7 +102,7 @@ public class Merger
             Logger.WriteLine($"""
                 Found Conflicts in: '{group}'
                    - {string.Join("\n   - ", matches)}
-                """, LogLevel.OK);
+                """, LogLevel.Info);
         }
 
         Console.WriteLine();
@@ -94,8 +115,10 @@ public class Merger
             Logger.WriteLine($"""
                 Found Unmatched Files in: '{group}'
                    - [{string.Join("]\n   - [", matches)}]
-                """, LogLevel.OK);
+                """, LogLevel.Info);
         }
+
+        Console.WriteLine();
     }
 
     private void CopyToOutput(string root, string name)
