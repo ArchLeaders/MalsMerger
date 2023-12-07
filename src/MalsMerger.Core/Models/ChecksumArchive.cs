@@ -12,7 +12,7 @@ public class ChecksumArchive
     public ChecksumArchive(string version)
     {
         using Stream? stream = Assembly
-            .GetCallingAssembly()
+            .GetExecutingAssembly()
             .GetManifestResourceStream(
                 $"MalsMerger.Core.Resources.{version.Replace(".", string.Empty)}")
                     ?? throw new NotSupportedException(
