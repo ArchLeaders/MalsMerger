@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](License.txt) [![Downloads](https://img.shields.io/github/downloads/ArchLeaders/MalsMerger/total)](https://github.com/ArchLeaders/MalsMerger/releases)
 
-Simpel CLI tool for merging TotK `Mals` archives
+Simple CLI tool for merging TotK `Mals` archives
 
 ---
 
@@ -15,9 +15,9 @@ Simpel CLI tool for merging TotK `Mals` archives
 ### Input Folders: (Path)
 > Required Argument (1)
 
-Bar (`|`) seperated list of mod folders to merge. *(**Priority**: highest to lowest <-> left to right)*.
+Bar (`|`) separated list of mod folders to merge. *(**Priority**: highest to lowest <-> left to right)*.
 
-> **Note:** This should be one argument surounded by quotes.<br>
+> **Note:** This should be one argument surrounded by quotes.<br>
 > Quotation marks should NOT be around each path (see examples)
 
 > **Note:** Input folders that do not end in `Mals` or do not contain a subfolder named `Mals` will be skipped.
