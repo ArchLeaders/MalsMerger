@@ -5,11 +5,7 @@ VisualStudioVersion = 17.8.34309.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MalsMerger", "MalsMerger\MalsMerger.csproj", "{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MalsMerger.Core", "MalsMerger.Core\MalsMerger.Core.csproj", "{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{E3152251-DD9F-4E77-9015-F9BC685252BA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MalsMerger.ChecksumGenerator", "..\scripts\MalsMerger.ChecksumGenerator\MalsMerger.ChecksumGenerator.csproj", "{782B64A0-C9E8-47C7-9030-686E03C421D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MalsMerger.Core", "MalsMerger.Core\MalsMerger.Core.csproj", "{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +17,6 @@ Global
 		{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{709CBA75-20B4-40F1-B03C-E7E9DDDA7D12}.Release|Any CPU.Build.0 = Release|Any CPU
-		{782B64A0-C9E8-47C7-9030-686E03C421D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{782B64A0-C9E8-47C7-9030-686E03C421D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{782B64A0-C9E8-47C7-9030-686E03C421D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{782B64A0-C9E8-47C7-9030-686E03C421D3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47AC046D-13F9-40C3-8ABB-10F5A6A6532F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -32,9 +24,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{782B64A0-C9E8-47C7-9030-686E03C421D3} = {E3152251-DD9F-4E77-9015-F9BC685252BA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16CC0C69-543F-4E58-887E-6554764A1C6E}
