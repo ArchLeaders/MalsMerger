@@ -24,7 +24,7 @@ The ideal scenario for mod users is using mods that have files based on[^1] the 
 
 ## Worst Case Scenario (Comparing Files with Varying Versions)
 
-The worst case scenario is that a change between two version files will be tracked as a mod change and overwrite a real mod change that it didn't need to.
+The worst case scenario is that a change between two versions will be tracked as a mod change and overwrite a real mod change that it didn't need to.
 
 ## Solutions (Mod User)
 
