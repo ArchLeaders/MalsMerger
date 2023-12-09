@@ -7,7 +7,7 @@ public class TotkConfig
 {
     private static readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Totk", "config.json");
 
-    public static readonly Lazy<TotkConfig> _shared = new(Load);
+    private static readonly Lazy<TotkConfig> _shared = new(Load);
     public static TotkConfig Shared => _shared.Value;
 
     public required string GamePath { get; set; }
