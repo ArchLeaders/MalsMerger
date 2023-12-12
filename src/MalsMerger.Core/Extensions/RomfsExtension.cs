@@ -2,7 +2,7 @@
 
 public static class RomfsExtension
 {
-    public static int TryGetVersion(this string romfsFolder, int @default = 100)
+    public static int GetVersion(this string romfsFolder, int @default = 100)
     {
         string regionLangMask = Path.Combine(romfsFolder, "System", "RegionLangMask.txt");
         if (File.Exists(regionLangMask)) {

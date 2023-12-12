@@ -9,7 +9,7 @@ public static class Const
         (c) Arch Leaders. MIT License
 
         Usage:
-          <input_folder(s)> <output_folder> [-l|-log LOG_FILE] [-v|--verbose VERBOSE]
+          <input_folder(s)> <output_folder> [-m|--merge MERGE] [-l|-log LOG_FILE] [-v|--verbose VERBOSE]
 
           Input Folders: (Path)
             Bar (|) seperated list of the input mod folders. [Priority: highest to lowest <-> left to right]
@@ -18,7 +18,10 @@ public static class Const
                     Quotation marks should NOT be around each path (see examples)
 
           Output Folder: (Path)
-            The output mod folder to put the merged Mals archives
+            The output mod folder to put the changelog files.
+
+          Merge: (Boolean)
+            Send the merged files to the output folder instead of changelogs.
 
           Log File: (Path)
             Specify a path to write logs to (logging disabled by default)
@@ -27,6 +30,6 @@ public static class Const
             Enable verbose logging
 
         Examples:
-          "path/to/mod_a|path/to/mod_b" "path/to/mod_final" -l mals-merger.log -v true
+          "path/to/mod_a|path/to/mod_b" "path/to/output" -m false -l mals-merger.log -v true
         """;
 }

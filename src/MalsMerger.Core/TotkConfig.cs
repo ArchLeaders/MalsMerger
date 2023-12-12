@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using MalsMerger.Core.Extensions;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace MalsMerger.Core;
@@ -14,6 +15,9 @@ public class TotkConfig
 
     [JsonIgnore]
     public string ZsDicPath => Path.Combine(GamePath, "Pack", "ZsDic.pack.zs");
+
+    [JsonIgnore]
+    public int Version => GamePath.GetVersion();
 
     public static TotkConfig Load()
     {
