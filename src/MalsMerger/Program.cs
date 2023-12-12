@@ -20,6 +20,7 @@ string command = args[0]
 string[] inputs = args[1]
     .Replace("\"", string.Empty)
     .Split('|')
+    .Select(x => x.TrimEnd('/').TrimEnd('\\'))
     .Where(Path.Exists)
     .ToArray();
 string output = args[2];
