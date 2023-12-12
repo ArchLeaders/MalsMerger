@@ -18,7 +18,7 @@ public static class Constants
 
             Merges the specified mods places the merged file(s) canonically in the output mod folder.
 
-            If a changelog is found in the mod folder (XXyy.Product.0.json) it will be used, but only if no Mals archive for that localization exists.
+            If a changelog is found in the mod folder (XXzz.Product.0.json) it will be used, but only if no Mals archive for that localization exists.
 
             Inputs: (Paths)
               Bar (`|`) seperated list of the input mod folders. [Priority: highest to lowest <-> left to right]

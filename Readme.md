@@ -45,7 +45,7 @@ For help information use `-h` or `--help`.
 
 Merges the specified mods places the merged file(s) canonically in the output mod folder.
 
-If a changelog is found in the mod folder (`XXyy.Product.0.json`) it will be used, but only if no Mals archive for that localization exists.
+If a changelog is found in the mod folder (`XXzz.Product.0.json`) it will be used, but only if no Mals archive for that localization exists.
 
 ### Inputs
 > `Paths`
