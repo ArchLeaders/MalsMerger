@@ -27,6 +27,11 @@ Bar (`|`) separated list of mod folders to merge. *(**Priority**: highest to low
 
 The output mod folder to export the merged Mals archives to.
 
+### Merge: (Boolean)
+> Optional Flag
+
+Send the merged files to the output folder instead of changelogs.
+
 ### Log File: (Path)
 > Optional Flag
 
