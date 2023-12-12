@@ -43,7 +43,7 @@ try {
 
     bool merge = flags.Get(false, "m", "merge");
     if (merge) {
-        Logger.WriteLine($"Merging Enabled", LogLevel.Info);    
+        Logger.WriteLine($"Merging Enabled", LogLevel.Info);
     }
 
     string outputFolder = args[1];

@@ -41,8 +41,7 @@ public class MalsChecksumHelper
         Span<ulong> keys = MemoryMarshal.Cast<byte, ulong>(_keys);
         int versionGroupIndex = keys.BinarySearch(key);
 
-        if (versionGroupIndex <= 0)
-        {
+        if (versionGroupIndex <= 0) {
             return ulong.MinValue;
         }
 
@@ -56,13 +55,10 @@ public class MalsChecksumHelper
         Span<ushort> versionMap = MemoryMarshal.Cast<byte, ushort>(_versionMap);
         ushort lastVersion;
 
-        while ((lastVersion = versionMap[index]) != version)
-        {
+        while ((lastVersion = versionMap[index]) != version) {
             int nextIndex = index + 1;
-            if (versionMap.Length == nextIndex || versionMap[nextIndex] <= lastVersion)
-            {
-                if (lastVersion > version)
-                {
+            if (versionMap.Length == nextIndex || versionMap[nextIndex] <= lastVersion) {
+                if (lastVersion > version) {
                     --index;
                 }
 

@@ -27,7 +27,7 @@ public static class ZstdHelper
         if (!file.EndsWith(".zs")) {
             return src;
         }
-        
+
         return _decompressor.Unwrap(src);
     }
 
@@ -36,7 +36,7 @@ public static class ZstdHelper
         if (!file.EndsWith(".zs")) {
             return buffer;
         }
-        
+
         return _compressor.Wrap(buffer);
     }
 }

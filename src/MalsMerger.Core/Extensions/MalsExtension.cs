@@ -25,25 +25,21 @@ public static class MalsExtension
     {
         bool isNotGameVersion = malsFile.Version == TotkConfig.Shared.Version;
 
-        if (!_malsFiles.TryGetValue(malsFile.Name, out SarcFile? mals))
-        {
+        if (!_malsFiles.TryGetValue(malsFile.Name, out SarcFile? mals)) {
             byte[] buffer = ZstdHelper.Decompress(malsFile.GetVanilla()
                 ?? throw new FileNotFoundException($"Could not find any version of the Mals file: '{malsFile.Name}:{malsFile.GetVanilla()}'")).ToArray();
 
             mals = _malsFiles[malsFile.Name] = SarcFile.FromBinary(buffer);
         }
 
-        if (isNotGameVersion && malsFile.Version is int version)
-        {
+        if (isNotGameVersion && malsFile.Version is int version) {
             string key = Path.Combine(malsFile.PreName ?? malsFile.Name, msbtFile, label).Replace('\\', '/');
-            if ((checksum = MalsChecksumHelper.Shared.GetEntry(xxHash64.ComputeHash(key), (ushort)version)) != ulong.MinValue)
-            {
+            if ((checksum = MalsChecksumHelper.Shared.GetEntry(xxHash64.ComputeHash(key), (ushort)version)) != ulong.MinValue) {
                 return null;
             }
         }
 
-        if (!_msbtFiles.TryGetValue(Path.Combine(malsFile.Name, msbtFile), out Msbt? msbt))
-        {
+        if (!_msbtFiles.TryGetValue(Path.Combine(malsFile.Name, msbtFile), out Msbt? msbt)) {
             msbt = _msbtFiles[Path.Combine(malsFile.Name, msbtFile)] = Msbt.FromBinary(mals[msbtFile]);
         }
 
