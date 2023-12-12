@@ -23,6 +23,7 @@ public static class MalsExtension
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static MsbtEntry? GetEntry(string label, string msbtFile, GameFile malsFile, out ulong checksum)
     {
+        checksum = ulong.MinValue;
         bool isNotGameVersion = malsFile.Version == TotkConfig.Shared.Version;
 
         if (!_malsFiles.TryGetValue(malsFile.Name, out SarcFile? mals)) {
@@ -43,7 +44,10 @@ public static class MalsExtension
             msbt = _msbtFiles[Path.Combine(malsFile.Name, msbtFile)] = Msbt.FromBinary(mals[msbtFile]);
         }
 
-        checksum = ulong.MinValue;
-        return msbt[label];
+        if (!msbt.TryGetValue(label, out MsbtEntry? entry)) {
+            return null;
+        }
+
+        return entry;
     }
 }
