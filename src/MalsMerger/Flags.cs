@@ -2,7 +2,7 @@
 
 public class Flags
 {
-    private readonly Dictionary<string, string> _flags = [];
+    private readonly Dictionary<string, string?> _flags = [];
 
     public static Flags Parse(string[] args)
     {
@@ -12,8 +12,9 @@ public class Flags
             int valueIndex = index + 1;
             string name = key.Replace("-", string.Empty);
 
-            if (args.Length > valueIndex && !string.IsNullOrEmpty(name)) {
-                result._flags.Add(name.ToLower(), args[valueIndex]);
+            if (!string.IsNullOrEmpty(name)) {
+                result._flags[name.ToLower()] = args.Length > valueIndex
+                    ? args[valueIndex] : null;
             }
         }
 
@@ -47,14 +48,17 @@ public class Flags
         Type type = typeof(T);
         string key = keyVariants.Where(_flags.ContainsKey).FirstOrDefault()
             ?? throw new KeyNotFoundException($"Could not find a matching key from the provided key variants: '{string.Join(", ", keyVariants)}'");
-        string value = _flags[key];
+        string? value = _flags[key];
 
         if (type == typeof(string)) {
-            return (T)(object)_flags[key];
+            return (T)(object)(_flags[key] ?? string.Empty);
         }
 
         if (type == typeof(bool)) {
-            if (bool.TryParse(value, out bool result)) {
+            if (value is null) {
+                return (T)(object)true;
+            }
+            else if (bool.TryParse(value, out bool result)) {
                 return (T)(object)result;
             }
 

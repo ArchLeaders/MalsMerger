@@ -17,7 +17,7 @@ public static class RomfsExtension
         return @default;
     }
 
-    public static bool IsValidMalsFolder(ref string romfsFolder)
+    public static bool IsValidMalsFolder(this string romfsFolder)
     {
         return Directory.Exists(Path.Combine(romfsFolder, "Mals"));
     }

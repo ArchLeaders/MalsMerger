@@ -19,5 +19,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MalsMerger.Core\MalsMerger.Core.csproj" />
   </ItemGroup>
+    
+    <ItemGroup>
+        <Using Include="MalsMerger.Core.Helpers.ConsoleHelper">
+            <Static>True</Static>
+        </Using>
+    </ItemGroup>
 
 </Project>
