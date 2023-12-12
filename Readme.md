@@ -11,11 +11,11 @@ Simple CLI tool for merging TotK `Mals` archives
 - [Commands](#commands)
   - [Merge Mods](#merge-mods)
     - [Inputs](#inputs)
-      - [Inputs Argument Notes](#inputs-argument-notes)
+      - [Inputs Parameter Notes](#inputs-parameter-notes)
     - [Output Mod Folder](#output-mod-folder)
   - [Generate Changelogs](#generate-changelogs)
     - [Inputs](#inputs-1)
-      - [Inputs Argument Notes](#inputs-argument-notes-1)
+      - [Inputs Parameter Notes](#inputs-parameter-notes-1)
     - [Output Mod Folder](#output-mod-folder-1)
 - [Global Options](#global-options)
   - [Log File Path](#log-file-path)
@@ -26,7 +26,7 @@ Simple CLI tool for merging TotK `Mals` archives
 # Usage
 
 ```
-<Command> [Options]
+<Command> <Parameters> [Options]
 ```
 
 # Commands
@@ -47,7 +47,7 @@ Bar (`|`) seperated list of the input mod folders or changelogs.
 
 *[Priority: highest to lowest <-> left to right]*
 
-#### Inputs Argument Notes
+#### Inputs Parameter Notes
 
 - This should be one argument surounded by quotes. Quotation marks should NOT be around each path (see examples)
 - Changelogs must be named using the pattern: "XXzz.Product.json"
@@ -75,7 +75,7 @@ Bar (`|`) seperated list of the input mod folders or changelogs.
 
 *[Priority: highest to lowest <-> left to right]*
 
-#### Inputs Argument Notes
+#### Inputs Parameter Notes
 
 - This should be one argument surounded by quotes. Quotation marks should ***NOT*** be around each path (see examples)
 
