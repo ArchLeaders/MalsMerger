@@ -82,6 +82,8 @@ try {
     }
 
     if (merge) {
+        Logger.WriteLine("Merging, this may take a moment...", LogLevel.Info);
+
         foreach ((var mals, var changes) in changelog) {
             GameFile outputMals = new(mals, "sarc.zs", "Mals");
             string vanilla = outputMals.GetVanilla()
