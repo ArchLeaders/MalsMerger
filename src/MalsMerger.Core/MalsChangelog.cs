@@ -52,8 +52,8 @@ public class MalsChangelog : Dictionary<string, Dictionary<string, Msbt>>
 
             if (data[0..8].SequenceEqual("MsgStdBn"u8)) {
                 Msbt msbt = Msbt.FromBinary(data);
-                Msbt changes = logged.ContainsKey(msbtFile)
-                    ? Merge(msbt, logged[msbtFile], msbtFile, file)
+                Msbt changes = logged.TryGetValue(msbtFile, out Msbt? value)
+                    ? Merge(msbt, value, msbtFile, file)
                     : GetChanges(msbt, msbtFile, file);
 
                 if (changes.Count > 0) {
