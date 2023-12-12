@@ -5,6 +5,9 @@ using MalsMerger.Core.Helpers;
 using MalsMerger.Core.Models;
 using MessageStudio.Formats.BinaryText;
 using SarcLibrary;
+using System.Diagnostics;
+
+Stopwatch watch = Stopwatch.StartNew();
 
 try {
     Logger.Triforce("TotK Mals Merger");
@@ -34,16 +37,16 @@ try {
     Flags flags = Flags.Parse(args[2..]);
 
     Logger.Verbose = flags.Get(false, "v", "verbose");
-    Logger.WriteLine("Verbose Logging Enabled", LogLevel.OK);
+    Logger.WriteLine("Verbose Logging enabled", LogLevel.OK);
 
     if (flags.TryGet(out string? logFile, "l", "log") && logFile is not null) {
-        Logger.WriteLine("Logging Enabled", LogLevel.Info);
+        Logger.WriteLine("Logging enabled", LogLevel.Info);
         Logger.CreateLogFile(logFile);
     }
 
     bool merge = flags.Get(false, "m", "merge");
     if (merge) {
-        Logger.WriteLine($"Merging Enabled", LogLevel.Info);
+        Logger.WriteLine($"Merging enabled", LogLevel.Info);
     }
 
     string outputFolder = args[1];
@@ -56,8 +59,7 @@ try {
     }
 #endif
 
-    Logger.WriteLine($"Registered MalsCache with game version: " +
-        $"{TotkConfig.Shared.GamePath.GetVersion()}", LogLevel.Info);
+    Logger.WriteLine($"Found game version: {TotkConfig.Shared.Version}", LogLevel.Info);
 
     foreach (var path in inputFolders) {
         Logger.WriteLine($"Located input path: '{path}'", LogLevel.Info);
@@ -124,8 +126,15 @@ try {
         using FileStream fs = File.Create(Path.Combine(outputFolder, "mals.json"));
         changelog.WriteJson(fs);
     }
+
+    Logger.WriteLine($"Operation completed in {watch.ElapsedMilliseconds / 100.0} seconds.", LogLevel.Info);
 }
 catch (Exception ex) {
     Logger.WriteLine(ex, LogLevel.Error);
+
+#if DEBUG
+    throw;
+#else
     Environment.Exit(ex.HResult);
+#endif
 }
