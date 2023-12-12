@@ -1,20 +1,24 @@
-﻿using System.Buffers.Binary;
+﻿using MalsMerger.Core.Models;
+using MessageStudio.Formats.BinaryText;
+using SarcLibrary;
+using Standart.Hash.xxHash;
+using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
 namespace MalsMerger.Core.Helpers;
 
-public class MalsChecksumHelper
+public static class MalsChecksumHelper
 {
-    private static readonly Lazy<MalsChecksumHelper> _shared = new(new MalsChecksumHelper());
-    public static MalsChecksumHelper Shared => _shared.Value;
+    private static readonly Dictionary<string, SarcFile> _malsFiles = [];
+    private static readonly Dictionary<string, Msbt> _msbtFiles = [];
 
-    private readonly byte[] _keys;
-    private readonly byte[] _versionGroupMap;
-    private readonly byte[] _versionMap;
-    private readonly byte[] _checksums;
+    private static readonly byte[] _keys;
+    private static readonly byte[] _versionGroupMap;
+    private static readonly byte[] _versionMap;
+    private static readonly byte[] _checksums;
 
-    public MalsChecksumHelper()
+    static MalsChecksumHelper()
     {
         using Stream stream = Assembly
             .GetExecutingAssembly()
@@ -36,7 +40,44 @@ public class MalsChecksumHelper
         stream.Read(_checksums = new byte[stream.Length - checksumsOffset]);
     }
 
-    public ulong GetEntry(ulong key, ushort version)
+    public static bool IsVanilla(this MsbtEntry entry, GameFile malsArchiveFile, string msbtFile, string label)
+    {
+        MsbtEntry? vanilla = GetEntry(malsArchiveFile, msbtFile, label, out ulong checksum);
+        return checksum == ulong.MinValue
+            ? vanilla?.Text == entry.Text && vanilla?.Attribute == entry.Attribute
+            : xxHash64.ComputeHash(entry.Text + entry.Attribute) == checksum;
+    }
+
+    private static MsbtEntry? GetEntry(GameFile malsArchiveFile, string msbtFile, string label, out ulong checksum)
+    {
+        checksum = ulong.MinValue;
+        bool isNotGameVersion = malsArchiveFile.Version == TotkConfig.Shared.Version;
+
+        if (!_malsFiles.TryGetValue(malsArchiveFile.Name, out SarcFile? mals)) {
+            byte[] buffer = ZstdHelper.Decompress(malsArchiveFile.GetVanilla()).ToArray();
+
+            mals = _malsFiles[malsArchiveFile.Name] = SarcFile.FromBinary(buffer);
+        }
+
+        if (isNotGameVersion && malsArchiveFile.Version is int version) {
+            string key = Path.Combine(malsArchiveFile.NamePrefix ?? malsArchiveFile.Name, msbtFile, label).Replace('\\', '/');
+            if ((checksum = GetChecksum(xxHash64.ComputeHash(key), (ushort)version)) != ulong.MinValue) {
+                return null;
+            }
+        }
+
+        if (!_msbtFiles.TryGetValue(Path.Combine(malsArchiveFile.Name, msbtFile), out Msbt? msbt)) {
+            msbt = _msbtFiles[Path.Combine(malsArchiveFile.Name, msbtFile)] = Msbt.FromBinary(mals[msbtFile]);
+        }
+
+        if (!msbt.TryGetValue(label, out MsbtEntry? entry)) {
+            return null;
+        }
+
+        return entry;
+    }
+
+    private static ulong GetChecksum(ulong key, ushort version)
     {
         Span<ulong> keys = MemoryMarshal.Cast<byte, ulong>(_keys);
         int versionGroupIndex = keys.BinarySearch(key);

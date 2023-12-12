@@ -17,4 +17,10 @@
     <PackageReference Include="ZstdSharp.Port" Version="0.7.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Using Include="MalsMerger.Core.Helpers.ConsoleHelper">
+      <Static>True</Static>
+    </Using>
+  </ItemGroup>
+
 </Project>

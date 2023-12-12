@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Text;
 
-namespace MalsMerger;
+namespace MalsMerger.Core.Helpers;
 
 public enum LogLevel
 {
     None, OK, Info, Warning, Error
 }
 
-public static class Logger
+public static class ConsoleHelper
 {
     private const string Padding = "  ";
     private const string TriforceASCII = $"""
@@ -23,7 +23,7 @@ public static class Logger
     public static bool Verbose { get; set; } = false;
     public static StreamWriter? LogFile { get; set; } = null;
 
-    public static void Triforce(string title, ConsoleColor color = ConsoleColor.Blue)
+    public static void PrintTriforce(string title, ConsoleColor color = ConsoleColor.Blue)
     {
         StringBuilder sb = new("\n");
 
@@ -51,7 +51,7 @@ public static class Logger
         }
         else {
             int padding = (int)Math.Ceiling(-(len - width) / 2);
-            string line = Padding + new string('_', len + padding * 2);
+            string line = Padding + new string('_', len + (padding * 2));
             sb.AppendLine(TriforceASCII.Replace("*", string.Empty));
             sb.AppendLine(line);
             sb.Append($"\n{Padding}  {new string(' ', padding)}- ");
@@ -77,21 +77,21 @@ public static class Logger
         LogFile?.Dispose();
     }
 
-    public static void WriteLine(object obj, LogLevel level = LogLevel.None)
+    public static void Print(object obj, LogLevel level = LogLevel.None)
     {
         if (level == LogLevel.None) {
-            WriteLine(obj.ToString() ?? string.Empty);
+            Print(obj.ToString() ?? string.Empty);
         }
         else if (level == LogLevel.Info) {
             Console.ForegroundColor = ConsoleColor.Blue;
-            WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
+            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.OK && Verbose) {
-            WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
+            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.Warning && Verbose) {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            WriteLine($"[{level}] [{DateTime.Now:g}] -> {obj}");
+            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
         else if (level == LogLevel.Error) {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -101,7 +101,7 @@ public static class Logger
         Console.ResetColor();
     }
 
-    private static void WriteLine(string msg)
+    private static void Print(string msg)
     {
         LogFile?.WriteLine(msg);
         Console.WriteLine(msg);
@@ -115,6 +115,6 @@ public static class Logger
     {
         string header = $"[ERROR] [{DateTime.Now:g}] -> ";
         string padding = $"\n{Padding}";
-        WriteLine(header + obj.ToString()?.Replace("\n", padding));
+        Print(header + obj.ToString()?.Replace("\n", padding));
     }
 }
