@@ -16,15 +16,17 @@ public static class Constants
           Merge-Mods: (merge, merge-mods)
             <Input(s)> <Output-Mod-Folder>
 
-            Merges the specified mods or changelogs and places the merged file(s) canonically in the output mod folder.
+            Merges the specified mods places the merged file(s) canonically in the output mod folder.
+
+            If a changelog is found in the mod folder (XXyy.Product.0.json) it will be used, but only if no Mals archive for that localization exists.
 
             Inputs: (Paths)
-              Bar (|) seperated list of the input mod folders or changelogs. [Priority: highest to lowest <-> left to right]
+              Bar (`|`) seperated list of the input mod folders. [Priority: highest to lowest <-> left to right]
 
               Note: This should be one argument surounded by quotes.
                     Quotation marks should NOT be around each path (see examples)
               
-              Warning: Changelogs must be named using the pattern: "XXzz.Product.json"
+              Warning: Changelogs must be named using the pattern: "XXzz.Product.0.json"
 
             Output Mod Folder: (Path)
               The path to the output mod folder.

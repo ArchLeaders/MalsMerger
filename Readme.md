@@ -20,6 +20,9 @@ Simple CLI tool for merging TotK `Mals` archives
 - [Global Options](#global-options)
   - [Log File Path](#log-file-path)
   - [Verbose Logging](#verbose-logging)
+- [Examples](#examples)
+  - [Generate Changelogs from Mod Folders](#generate-changelogs-from-mod-folders)
+  - [Merge Mod Folders](#merge-mod-folders)
 
 ---
 
@@ -28,6 +31,8 @@ Simple CLI tool for merging TotK `Mals` archives
 ```
 <Command> <Parameters> [Options]
 ```
+
+For help information use `-h` or `--help`.
 
 # Commands
 
@@ -38,19 +43,21 @@ Simple CLI tool for merging TotK `Mals` archives
 <Input(s)> <Output-Mod-Folder>
 ```
 
-Merges the specified mods or changelogs and places the merged file(s) canonically in the output mod folder.
+Merges the specified mods places the merged file(s) canonically in the output mod folder.
+
+If a changelog is found in the mod folder (`XXyy.Product.0.json`) it will be used, but only if no Mals archive for that localization exists.
 
 ### Inputs
 > `Paths`
 
-Bar (`|`) seperated list of the input mod folders or changelogs.
+Bar (`|`) seperated list of the input mod folders.
 
 *[Priority: highest to lowest <-> left to right]*
 
 #### Inputs Parameter Notes
 
-- This should be one argument surounded by quotes. Quotation marks should NOT be around each path (see examples)
-- Changelogs must be named using the pattern: "XXzz.Product.json"
+- This should be one argument surounded by quotes. Quotation marks should NOT be around each path (see examples).
+- Changelogs must be named using the pattern: `XXzz.Product.0.json`
 
 ### Output Mod Folder
 > `Path`
@@ -95,3 +102,17 @@ Specify a path to write logs to (logging disabled by default)
 > `Flag`
 
 Enable verbose logging
+
+# Examples
+
+## Generate Changelogs from Mod Folders
+
+```
+gen "path/to/mod_a|path/to/mod_b" "path/to/output" --verbose
+```
+
+## Merge Mod Folders
+
+```
+merge "path/to/mod_a|path/to/mod_b" "path/to/output" -l "path/to/log.txt"
+```

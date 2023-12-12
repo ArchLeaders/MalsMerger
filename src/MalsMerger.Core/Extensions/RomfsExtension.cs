@@ -27,6 +27,7 @@ public static class RomfsExtension
         return Directory
             .EnumerateFiles(Path.Combine(romfsFolder, "Mals"))
             .Select(x => new GameFile(x, romfsFolder))
+            .OrderByDescending(x => x.Version)
             .DistinctBy(x => x.NamePrefix);
     }
 

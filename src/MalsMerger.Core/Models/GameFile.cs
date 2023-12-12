@@ -70,9 +70,9 @@ public partial class GameFile
         return Path.Combine(folder, Name);
     }
 
-    public string GetPathWithoutVersion()
+    public string GetPath()
     {
-        return Path.Combine(_romfs, Folder, $"{NamePrefix}.{NamePostfix}");
+        return Path.Combine(_romfs, Folder, Name);
     }
 
     public string GetVanilla()

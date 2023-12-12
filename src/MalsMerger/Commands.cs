@@ -19,7 +19,7 @@ public class Commands
         // left > right priority
         Array.Reverse(inputs);
 
-        foreach (var inputFile in inputs.SelectMany(x => File.Exists(x) ? [new GameFile(Path.GetFileNameWithoutExtension(x), "json", Path.GetDirectoryName(x) ?? ".")] : x.GetMalsArchives())) {
+        foreach (var inputFile in inputs.SelectMany(x => x.GetMalsArchives())) {
             if (!_changelogs.TryGetValue(inputFile.NamePrefix, out MalsChangelog? changelog)) {
                 _changelogs[inputFile.NamePrefix] = changelog = [];
             }
@@ -27,7 +27,7 @@ public class Commands
             if (inputFile.NamePostfix is "json") {
                 Print($"Found Changelog '{inputFile.Name}'...", LogLevel.Info);
 
-                using FileStream readJsonChangelog = File.OpenRead(inputFile.GetPathWithoutVersion());
+                using FileStream readJsonChangelog = File.OpenRead(inputFile.GetPath());
                 changelog.Append(
                     JsonSerializer.Deserialize(readJsonChangelog, MalsChangelogSerializerContext.Default.MalsChangelog)
                         ?? throw new InvalidOperationException("Could not parse changelog, the deserializer returned null.")
@@ -62,7 +62,7 @@ public class Commands
         foreach ((var malsArchiveFile, var changelog) in _changelogs.Select(x => (new GameFile(x.Key, "sarc.zs", "Mals"), x.Value))) {
             string outputFolder = Path.Combine(_output, "Mals");
             Directory.CreateDirectory(outputFolder);
-            using FileStream fs = File.Create(Path.Combine(outputFolder, $"{malsArchiveFile.NamePrefix}.json"));
+            using FileStream fs = File.Create(Path.Combine(outputFolder, $"{malsArchiveFile.NamePrefix}.0.json"));
 
 #pragma warning disable IL2026 // This is safe because context
 #pragma warning disable IL3050 // is provided to the options
