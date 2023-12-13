@@ -1,4 +1,5 @@
-﻿using SarcLibrary;
+﻿using Revrs;
+using SarcLibrary;
 using ZstdSharp;
 
 namespace MalsMerger.Core.Helpers;
@@ -11,9 +12,10 @@ public static class ZstdHelper
     static ZstdHelper()
     {
         Span<byte> data = _decompressor.Unwrap(File.ReadAllBytes(TotkConfig.Shared.ZsDicPath));
-        SarcFile sarc = SarcFile.FromBinary(data.ToArray());
-        _decompressor.LoadDictionary(sarc["zs.zsdic"]);
-        _compressor.LoadDictionary(sarc["zs.zsdic"]);
+        RevrsReader reader = new(data);
+        ImmutableSarc sarc = new(ref reader);
+        _decompressor.LoadDictionary(sarc["zs.zsdic"].Data);
+        _compressor.LoadDictionary(sarc["zs.zsdic"].Data);
     }
 
     public static Span<byte> Decompress(string file)

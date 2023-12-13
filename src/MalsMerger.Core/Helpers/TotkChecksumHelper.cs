@@ -9,21 +9,21 @@ public static class TotkChecksumHelper
     private static readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Totk", "checksums.bin");
     private static readonly byte[] _buffer = File.ReadAllBytes(_path);
 
-    public static bool IsVanilla(this byte[] buffer, GameFile malsArchivePath)
+    public static bool IsVanilla(this Span<byte> buffer, GameFile malsArchivePath)
     {
         return buffer.IsVanillaCore(malsArchivePath, Path.Combine("Mals", malsArchivePath.Name)
             .Replace('\\', '/'));
     }
 
-    public static bool IsVanilla(this byte[] buffer, GameFile malsArchivePath, string msbtPath)
+    public static bool IsVanilla(this Span<byte> buffer, GameFile malsArchivePath, string msbtPath)
     {
         return buffer.IsVanillaCore(malsArchivePath, Path.Combine("Mals", malsArchivePath.Name, msbtPath)
             .Replace('\\', '/'));
     }
 
-    private static bool IsVanillaCore(this byte[] buffer, GameFile malsArchivePath, string key)
+    private static bool IsVanillaCore(this Span<byte> buffer, GameFile malsArchivePath, string key)
     {
-        return xxHash64.ComputeHash(buffer) == GetChecksum(key, malsArchivePath.Version);
+        return xxHash64.ComputeHash(buffer, buffer.Length) == GetChecksum(key, malsArchivePath.Version);
     }
 
     public static ulong GetChecksum(string key, int version)

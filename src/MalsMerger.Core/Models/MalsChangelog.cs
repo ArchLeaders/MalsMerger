@@ -1,6 +1,7 @@
 ﻿using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MessageStudio.Formats.BinaryText;
+using Revrs;
 using SarcLibrary;
 using System.Text.Json.Serialization;
 
@@ -15,8 +16,8 @@ public class MalsChangelog : Dictionary<string, Msbt>
     /// <param name="malsArchiveData"></param>
     public void Append(GameFile malsArchiveFile, byte[] malsArchiveData)
     {
-        SarcFile malsArchive = SarcFile.FromBinary(
-            ZstdHelper.Decompress(malsArchiveData, malsArchiveFile.Name).ToArray());
+        RevrsReader reader = new(ZstdHelper.Decompress(malsArchiveData, malsArchiveFile.Name));
+        ImmutableSarc malsArchive = new(ref reader);
 
         foreach ((var msbtFile, var msbtData) in malsArchive) {
             if (!msbtData.IsMsbtFile() || msbtData.IsVanilla(malsArchiveFile, msbtFile)) {
@@ -66,10 +67,9 @@ public class MalsChangelog : Dictionary<string, Msbt>
     public void Build(GameFile malsArchive, Stream output)
     {
         string vanillaMalsArchivePath = malsArchive.GetVanilla();
-        SarcFile vanillaMalsArchive = SarcFile.FromBinary(
+        Sarc vanillaMalsArchive = Sarc.FromBinary(
             ZstdHelper.Decompress(
-                File.ReadAllBytes(vanillaMalsArchivePath), vanillaMalsArchivePath)
-            .ToArray());
+                File.ReadAllBytes(vanillaMalsArchivePath), vanillaMalsArchivePath));
 
         foreach ((var msbtPath, var msbt) in this) {
             Msbt vanillaMsbt = Msbt.FromBinary(vanillaMalsArchive[msbtPath]);
@@ -82,8 +82,11 @@ public class MalsChangelog : Dictionary<string, Msbt>
             vanillaMalsArchive[msbtPath] = msbtBinaryStream.ToArray();
         }
 
+        using MemoryStream malsBinaryStream = new();
+        vanillaMalsArchive.Write(malsBinaryStream);
+
         Span<byte> mergedMalsArchiveData = ZstdHelper.Compress(
-            vanillaMalsArchive.ToBinary(), vanillaMalsArchivePath);
+            malsBinaryStream.ToArray(), vanillaMalsArchivePath);
         output.Write(mergedMalsArchiveData);
     }
 }

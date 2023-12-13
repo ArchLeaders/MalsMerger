@@ -10,7 +10,7 @@ namespace MalsMerger.Core.Helpers;
 
 public static class MalsChecksumHelper
 {
-    private static readonly Dictionary<string, SarcFile> _malsFiles = [];
+    private static readonly Dictionary<string, Sarc> _malsFiles = [];
     private static readonly Dictionary<string, Msbt> _msbtFiles = [];
 
     private static readonly byte[] _keys;
@@ -53,10 +53,9 @@ public static class MalsChecksumHelper
         checksum = ulong.MinValue;
         bool isNotGameVersion = malsArchiveFile.Version == TotkConfig.Shared.Version;
 
-        if (!_malsFiles.TryGetValue(malsArchiveFile.Name, out SarcFile? mals)) {
-            byte[] buffer = ZstdHelper.Decompress(malsArchiveFile.GetVanilla()).ToArray();
-
-            mals = _malsFiles[malsArchiveFile.Name] = SarcFile.FromBinary(buffer);
+        if (!_malsFiles.TryGetValue(malsArchiveFile.Name, out Sarc? mals)) {
+            Span<byte> buffer = ZstdHelper.Decompress(malsArchiveFile.GetVanilla());
+            mals = _malsFiles[malsArchiveFile.Name] = Sarc.FromBinary(buffer);
         }
 
         if (isNotGameVersion && malsArchiveFile.Version is int version) {

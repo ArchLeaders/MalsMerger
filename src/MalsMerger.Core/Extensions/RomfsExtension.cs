@@ -31,8 +31,8 @@ public static class RomfsExtension
             .DistinctBy(x => x.NamePrefix);
     }
 
-    public static bool IsMsbtFile(this byte[] data)
+    public static bool IsMsbtFile(this Span<byte> data)
     {
-        return data.AsSpan()[0..8].SequenceEqual("MsgStdBn"u8);
+        return data[0..8].SequenceEqual("MsgStdBn"u8);
     }
 }
