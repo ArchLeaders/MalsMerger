@@ -65,8 +65,13 @@ public static class MalsChecksumHelper
             }
         }
 
-        if (!_msbtFiles.TryGetValue(Path.Combine(malsArchiveFile.Name, msbtFile), out Msbt? msbt)) {
-            msbt = _msbtFiles[Path.Combine(malsArchiveFile.Name, msbtFile)] = Msbt.FromBinary(mals[msbtFile]);
+        if (!mals.TryGetValue(msbtFile, out _)) {
+            return null;
+        }
+
+        string msbtPath = Path.Combine(malsArchiveFile.Name, msbtFile);
+        if (!_msbtFiles.TryGetValue(msbtPath, out Msbt? msbt)) {
+            msbt = _msbtFiles[msbtPath] = Msbt.FromBinary(mals[msbtFile]);
         }
 
         if (!msbt.TryGetValue(label, out MsbtEntry? entry)) {
