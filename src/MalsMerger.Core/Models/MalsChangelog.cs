@@ -24,10 +24,23 @@ public class MalsChangelog : Dictionary<string, Msbt>
                 continue;
             }
 
-            Msbt msbt = Msbt.FromBinary(msbtData);
+            try {
+                Msbt msbt = Msbt.FromBinary(msbtData);
 
-            TryGetValue(msbtFile, out Msbt? currentMsbt);
-            this[msbtFile] = Merge(msbt, currentMsbt ?? [], msbtFile);
+                TryGetValue(msbtFile, out Msbt? currentMsbt);
+                this[msbtFile] = Merge(msbt, currentMsbt ?? [], msbtFile);
+            }
+            catch (ArgumentException ex) {
+                if (ex.Message.StartsWith("Argument_AddingDuplicateWithKey, ")) {
+                    Print($"The MSBT file '{malsArchiveFile.GetPath().Replace('\\', '/')}//{msbtFile}' had two instances of the key " +
+                        $"'{ex.Message.Split(',')[1].Trim()}'", LogLevel.Error);
+                }
+
+                throw;
+            }
+            catch {
+                throw;
+            }
         }
 
         Msbt Merge(Msbt msbtA, Msbt msbtB, string msbtPath)
