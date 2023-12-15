@@ -2,7 +2,7 @@
   "profiles": {
     "MalsMerger": {
       "commandName": "Project",
-      "commandLineArgs": "gen \"D:\\bin\\MalsMerger\\mod_a|D:\\bin\\MalsMerger\\mod_b|D:\\bin\\MalsMerger\\mod_c|D:\\bin\\MalsMerger\\mod_d|D:\\bin\\MalsMerger\\mod_e\" \"D:\\bin\\MalsMerger\\mod_final\" -l D:\\bin\\MalsMerger\\output.log -f"
+      "commandLineArgs": "merge \"D:\\bin\\MalsMerger\\mod_a|D:\\bin\\MalsMerger\\mod_b|D:\\bin\\MalsMerger\\mod_c|D:\\bin\\MalsMerger\\mod_d|D:\\bin\\MalsMerger\\mod_e\" \"D:\\bin\\MalsMerger\\mod_final\" -l D:\\bin\\MalsMerger\\output.log -f"
     }
   }
 }

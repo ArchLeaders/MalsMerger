@@ -85,14 +85,24 @@ public class MalsChangelog : Dictionary<string, Msbt>
                 File.ReadAllBytes(vanillaMalsArchivePath), vanillaMalsArchivePath));
 
         foreach ((var msbtPath, var msbt) in this) {
-            Msbt vanillaMsbt = Msbt.FromBinary(vanillaMalsArchive[msbtPath]);
+            if (!vanillaMalsArchive.TryGetValue(msbtPath, out byte[]? msbtData)) {
+                WriteMsbtIntoMals(msbtPath, msbt);
+                continue;
+            }
+
+            Msbt vanillaMsbt = Msbt.FromBinary(msbtData);
             foreach ((var label, var entry) in msbt) {
                 vanillaMsbt[label] = entry;
             }
 
-            using MemoryStream msbtBinaryStream = new();
-            vanillaMsbt.ToBinary(msbtBinaryStream, vanillaMsbt.Encoding, vanillaMsbt.Endian);
-            vanillaMalsArchive[msbtPath] = msbtBinaryStream.ToArray();
+            WriteMsbtIntoMals(msbtPath, vanillaMsbt);
+
+            void WriteMsbtIntoMals(string msbtPath, Msbt msbt)
+            {
+                using MemoryStream msbtBinaryStream = new();
+                msbt.ToBinary(msbtBinaryStream, msbt.Encoding, msbt.Endian);
+                vanillaMalsArchive[msbtPath] = msbtBinaryStream.ToArray();
+            }
         }
 
         using MemoryStream malsBinaryStream = new();
