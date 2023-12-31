@@ -73,7 +73,7 @@ The path to the output mod folder.
 <Input(s)> <Output-Mod-Folder> [-f|--format]
 ```
 
-Merges the specified mods or changelogs and places the merged file(s) canonically in the output mod folder.
+Generates changelogs for each specified mod and places the changelog(s) canonically in the output mod folder.
 
 ### Inputs
 > `Paths`
