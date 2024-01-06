@@ -33,12 +33,14 @@ public class MalsChangelog : Dictionary<string, Msbt>
             catch (ArgumentException ex) {
                 if (ex.Message.StartsWith("Argument_AddingDuplicateWithKey, ")) {
                     Print($"The MSBT file '{malsArchiveFile.GetPath().Replace('\\', '/')}//{msbtFile}' had two instances of the key " +
-                        $"'{ex.Message.Split(',')[1].Trim()}'", LogLevel.Error);
+                        $"'{ex.Message.Split(',')[1].Trim()}'", LogLevel.Warning);
                 }
-
-                throw;
+                else {
+                    throw;
+                }
             }
             catch {
+                Print($"Error in '{malsArchiveFile.GetPath().Replace('\\', '/')}//{msbtFile}', buffer size was {msbtData.Length}");
                 throw;
             }
         }
