@@ -47,6 +47,7 @@ public class Commands
     {
         foreach ((var malsArchiveFile, var changelog) in _changelogs.Select(x => (new GameFile(x.Key, "sarc.zs", "Mals"), x.Value))) {
             string malsArchivePath = malsArchiveFile.BuildOutput(_output);
+            Console.WriteLine($"@{malsArchivePath}");
             using FileStream fs = File.Create(malsArchivePath);
             changelog.Build(malsArchiveFile, fs);
         }
