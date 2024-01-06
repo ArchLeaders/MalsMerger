@@ -101,11 +101,6 @@ public partial class GameFile
 
         string folder = Path.Combine(romfs, Folder);
 
-        IEnumerable<GameFile> matches = Directory
-            .EnumerateFiles(folder, $"{NamePrefix}*{NamePostfix}")
-            .Select(x => new GameFile(x, string.Empty))
-            .OrderBy(x => x.Version);
-
         GameFile match = Directory
             .EnumerateFiles(folder, $"{NamePrefix}*{NamePostfix}")
             .Select(x => new GameFile(x, string.Empty))
