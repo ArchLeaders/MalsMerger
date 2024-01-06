@@ -89,7 +89,7 @@ public static class ConsoleHelper
         else if (level == LogLevel.OK && Verbose) {
             Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
-        else if (level == LogLevel.Warning && Verbose) {
+        else if (level == LogLevel.Warning) {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
         }
