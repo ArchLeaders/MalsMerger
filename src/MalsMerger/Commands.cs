@@ -2,6 +2,7 @@
 using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MalsMerger.Core.Models;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
 namespace MalsMerger;
@@ -11,7 +12,7 @@ public class Commands
     private readonly Dictionary<string, MalsChangelog> _changelogs = [];
     private readonly string _output;
 
-    public Commands(string[] inputs, string output)
+    public Commands(string[] inputs, string output, string? localization)
     {
         Directory.CreateDirectory(_output = output);
 
@@ -19,9 +20,12 @@ public class Commands
         // left > right priority
         Array.Reverse(inputs);
 
-        foreach (var inputFile in inputs.SelectMany(x => x.GetMalsArchives())) {
-            if (!_changelogs.TryGetValue(inputFile.NamePrefix, out MalsChangelog? changelog)) {
-                _changelogs[inputFile.NamePrefix] = changelog = [];
+        foreach (var inputFile in inputs.SelectMany(x => x.GetMalsArchives(localization))) {
+            string key = localization is not null
+                ? $"{localization}.Product" : inputFile.NamePrefix;
+
+            if (!_changelogs.TryGetValue(key, out MalsChangelog? changelog)) {
+                _changelogs[key] = changelog = [];
             }
 
             if (inputFile.NamePostfix is "json") {

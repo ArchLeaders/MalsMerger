@@ -1,4 +1,5 @@
 ﻿using MalsMerger;
+using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using System.Diagnostics;
 
@@ -42,10 +43,19 @@ if (flags.TryGet(out string? logFile, "l", "log") && logFile is not null) {
     CreateLogFile(logFile);
 }
 
-try {
-    Commands commands = new(inputs, output);
+bool isMerge = command is "merge" or "merge-mods";
 
-    if (command is "merge" or "merge-mods") {
+// Get target localization
+string? localization = flags.Get<string?>(null, "t", "target", "l", "localization");
+if (isMerge && localization?.TryParseLocalization(out _, out _) == false) {
+    Print($"Could not parse localization target: '{localization}'", LogLevel.Error);
+    return;
+}
+
+try {
+    Commands commands = new(inputs, output, isMerge ? localization : null);
+
+    if (isMerge) {
         commands.MergeMods();
     }
     else if (command is "gen" or "gen-chlgs" or "gen-changelogs") {

@@ -14,7 +14,7 @@ public static class Constants
         Commands:
           
           Merge-Mods: (merge, merge-mods)
-            <Input(s)> <Output-Mod-Folder>
+            <Input(s)> <Output-Mod-Folder> [-t|--target]
 
             Merges the specified mods places the merged file(s) canonically in the output mod folder.
 
@@ -30,6 +30,9 @@ public static class Constants
 
             Output Mod Folder: (Path)
               The path to the output mod folder.
+
+            Target Localization: (String)
+              The localization to merge to (e.g. EUfr)
 
           Generate-Changelogs: (gen, gen-chlgs, gen-changelogs)
             <Input-Mod-Folders> <Output-Mod-Folder> [-f|--format]
