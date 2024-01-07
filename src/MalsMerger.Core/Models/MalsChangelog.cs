@@ -40,7 +40,6 @@ public class MalsChangelog : Dictionary<string, Msbt>
                 }
             }
             catch {
-                Print($"Error in '{malsArchiveFile.GetPath().Replace('\\', '/')}//{msbtFile}', buffer size was {msbtData.Length}");
                 throw;
             }
         }
