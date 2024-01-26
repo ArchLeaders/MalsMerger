@@ -21,8 +21,16 @@ string command = args[0]
 string[] inputs = args[1]
     .Replace("\"", string.Empty)
     .Split('|')
-    .Select(x => x.TrimEnd('/').TrimEnd('\\'))
-    .Where(Path.Exists)
+    .Select(x => {
+        x = x.TrimEnd('/').TrimEnd('\\');
+        string romfs = Path.Combine(x, "romfs");
+        if (Directory.Exists(romfs)) {
+            return romfs;
+        }
+
+        return x;
+    })
+    .Where(x => Directory.Exists(Path.Combine(x, "Mals")))
     .ToArray();
 string output = args[2];
 
