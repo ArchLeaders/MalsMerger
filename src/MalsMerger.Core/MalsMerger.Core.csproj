@@ -12,7 +12,7 @@
 
   <ItemGroup>
     <PackageReference Include="MessageStudio" Version="1.0.3" />
-    <PackageReference Include="SarcLibrary" Version="3.0.2" />
+    <PackageReference Include="SarcLibrary" Version="3.0.4" />
     <PackageReference Include="Standart.Hash.xxHash" Version="4.0.5" />
     <PackageReference Include="ZstdSharp.Port" Version="0.7.4" />
   </ItemGroup>
