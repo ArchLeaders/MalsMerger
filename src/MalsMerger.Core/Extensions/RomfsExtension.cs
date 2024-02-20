@@ -71,7 +71,7 @@ public static class RomfsExtension
         }
 
         region = localization[..2];
-        lang = localization[2..];
+        lang = localization[2..4];
         return true;
     }
 
