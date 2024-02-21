@@ -105,10 +105,7 @@ public static class ConsoleHelper
     {
         LogFile?.WriteLine(msg);
         Console.WriteLine(msg);
-
-#if DEBUG
-        Debug.WriteLine(msg);
-#endif
+        Trace.WriteLine(msg);
     }
 
     private static void LogError(object obj)
