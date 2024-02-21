@@ -9,6 +9,10 @@ namespace MalsMerger.Core.Models;
 
 public class MalsChangelog : Dictionary<string, Msbt>
 {
+    private static readonly MsbtOptions _msbtOptions = new() {
+        DuplicateKeyMode = MsbtDuplicateKeyMode.UseLastOccurrence
+    };
+
     /// <summary>
     /// Append a Mals archive and merge it with the current <see cref="MalsChangelog"/>.
     /// </summary>
@@ -25,7 +29,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
             }
 
             try {
-                Msbt msbt = Msbt.FromBinary(msbtData);
+                Msbt msbt = Msbt.FromBinary(msbtData, _msbtOptions);
 
                 TryGetValue(msbtFile, out Msbt? currentMsbt);
                 this[msbtFile] = Merge(msbt, currentMsbt ?? [], msbtFile);
@@ -91,7 +95,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
                 continue;
             }
 
-            Msbt vanillaMsbt = Msbt.FromBinary(msbtData);
+            Msbt vanillaMsbt = Msbt.FromBinary(msbtData, _msbtOptions);
             foreach ((var label, var entry) in msbt) {
                 vanillaMsbt[label] = entry;
             }
