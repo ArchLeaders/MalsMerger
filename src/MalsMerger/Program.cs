@@ -1,4 +1,5 @@
 ﻿using MalsMerger;
+using MalsMerger.Core;
 using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using System.Diagnostics;
@@ -61,13 +62,13 @@ if (isMerge && localization?.TryParseLocalization(out _, out _) == false) {
 }
 
 try {
-    Commands commands = new(inputs, output, isMerge ? localization : null);
+    Merger merger = new(inputs, output, isMerge ? localization : null);
 
     if (isMerge) {
-        commands.MergeMods();
+        merger.Merge();
     }
     else if (command is "gen" or "gen-chlgs" or "gen-changelogs") {
-        commands.GenerateChangelogs(flags);
+        merger.GenerateChangelogs(flags.Get(false, "f", "format"));
     }
     else {
         throw new ArgumentException($"Invalid command: '{command}'");

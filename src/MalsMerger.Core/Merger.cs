@@ -1,18 +1,16 @@
-﻿using MalsMerger.Core;
-using MalsMerger.Core.Extensions;
+﻿using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MalsMerger.Core.Models;
-using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
-namespace MalsMerger;
+namespace MalsMerger.Core;
 
-public class Commands
+public class Merger
 {
     private readonly Dictionary<string, MalsChangelog> _changelogs = [];
     private readonly string _output;
 
-    public Commands(string[] inputs, string output, string? localization)
+    public Merger(string[] inputs, string output, string? localization)
     {
         Directory.CreateDirectory(_output = output);
 
@@ -47,7 +45,7 @@ public class Commands
         }
     }
 
-    public void MergeMods()
+    public void Merge()
     {
         foreach ((var malsArchiveFile, var changelog) in _changelogs.Select(x => (new GameFile(x.Key, "sarc.zs", "Mals"), x.Value))) {
             string malsArchivePath = malsArchiveFile.BuildOutput(_output);
@@ -57,11 +55,11 @@ public class Commands
         }
     }
 
-    public void GenerateChangelogs(Flags flags)
+    public void GenerateChangelogs(bool format = false)
     {
         JsonSerializerOptions options = new() {
             TypeInfoResolver = MalsChangelogSerializerContext.Default,
-            WriteIndented = flags.Get(false, "f", "format")
+            WriteIndented = format
         };
 
         foreach ((var malsArchiveFile, var changelog) in _changelogs.Select(x => (new GameFile(x.Key, "sarc.zs", "Mals"), x.Value))) {
@@ -69,8 +67,6 @@ public class Commands
             Directory.CreateDirectory(outputFolder);
             using FileStream fs = File.Create(Path.Combine(outputFolder, $"{malsArchiveFile.NamePrefix}.0.json"));
 
-#pragma warning disable IL2026 // This is safe because context
-#pragma warning disable IL3050 // is provided to the options
             JsonSerializer.Serialize(fs, changelog, options);
         }
     }
