@@ -32,12 +32,10 @@ public static class TotkChecksumHelper
         int half = cast.Length / 2;
 
         int index;
-        if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash($"{key}#{version}"))) > -1)
-        {
+        if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash($"{key}#{version}"))) > -1) {
             return cast[half..][index];
         }
-        else if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash(key))) > -1)
-        {
+        else if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash(key))) > -1) {
             return cast[half..][index];
         }
 
