@@ -10,14 +10,14 @@ public enum LogLevel
 
 public static class ConsoleHelper
 {
-    private const string Padding = "  ";
-    private const string TriforceASCII = $"""
-        {Padding}*       /\\
-        {Padding}*      /  \\
-        {Padding}*     /____\\
-        {Padding}*    /\\   /\\
-        {Padding}*   /  \\ /  \\
-        {Padding}*  /____\/____\\
+    private const string PADDING = "  ";
+    private const string TRIFORCE_ASCII = $"""
+        {PADDING}*       /\\
+        {PADDING}*      /  \\
+        {PADDING}*     /____\\
+        {PADDING}*    /\\   /\\
+        {PADDING}*   /  \\ /  \\
+        {PADDING}*  /____\/____\\
         """;
 
     public static bool Verbose { get; set; } = false;
@@ -31,30 +31,30 @@ public static class ConsoleHelper
         int len = title.Length + 8;
 
         if (len == width) {
-            string line = Padding + new string('_', len);
-            sb.AppendLine(TriforceASCII.Replace("*", string.Empty));
+            string line = PADDING + new string('_', len);
+            sb.AppendLine(TRIFORCE_ASCII.Replace("*", string.Empty));
             sb.AppendLine(line);
-            sb.Append($"\n{Padding}  - ");
+            sb.Append($"\n{PADDING}  - ");
             sb.Append(title);
             sb.Append(" -\n");
             sb.AppendLine(line);
         }
         else if (len > width) {
             int padding = (int)Math.Floor((len - width) / 2);
-            string line = Padding + new string('_', len);
-            sb.AppendLine(TriforceASCII.Replace("*", new string(' ', padding)));
+            string line = PADDING + new string('_', len);
+            sb.AppendLine(TRIFORCE_ASCII.Replace("*", new string(' ', padding)));
             sb.AppendLine(line);
-            sb.Append($"\n{Padding}  - ");
+            sb.Append($"\n{PADDING}  - ");
             sb.Append(title);
             sb.Append(" -\n");
             sb.AppendLine(line);
         }
         else {
             int padding = (int)Math.Ceiling(-(len - width) / 2);
-            string line = Padding + new string('_', len + (padding * 2));
-            sb.AppendLine(TriforceASCII.Replace("*", string.Empty));
+            string line = PADDING + new string('_', len + (padding * 2));
+            sb.AppendLine(TRIFORCE_ASCII.Replace("*", string.Empty));
             sb.AppendLine(line);
-            sb.Append($"\n{Padding}  {new string(' ', padding)}- ");
+            sb.Append($"\n{PADDING}  {new string(' ', padding)}- ");
             sb.Append(title);
             sb.Append(" -\n");
             sb.AppendLine(line);
@@ -111,7 +111,7 @@ public static class ConsoleHelper
     private static void LogError(object obj)
     {
         string header = $"[ERROR] [{DateTime.Now:g}] -> ";
-        string padding = $"\n{Padding}";
+        string padding = $"\n{PADDING}";
         Print(header + obj.ToString()?.Replace("\n", padding));
     }
 }
