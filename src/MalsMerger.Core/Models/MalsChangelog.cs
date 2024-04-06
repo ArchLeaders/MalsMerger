@@ -1,9 +1,12 @@
-﻿using MalsMerger.Core.Extensions;
+﻿using CommunityToolkit.HighPerformance.Buffers;
+using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MessageStudio.Formats.BinaryText;
 using Revrs;
+using Revrs.Buffers;
 using SarcLibrary;
 using System.Text.Json.Serialization;
+using Totk.Common.Extensions;
 
 namespace MalsMerger.Core.Models;
 
@@ -20,7 +23,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
     /// <param name="malsArchiveData"></param>
     public void Append(GameFile malsArchiveFile, byte[] malsArchiveData)
     {
-        RevrsReader reader = new(ZstdHelper.Decompress(malsArchiveData, malsArchiveFile.Name));
+        RevrsReader reader = new(ZstdExtension.ZsDecompress(malsArchiveData));
         ImmutableSarc malsArchive = new(ref reader);
 
         foreach ((var msbtFile, var msbtData) in malsArchive) {
@@ -71,12 +74,22 @@ public class MalsChangelog : Dictionary<string, Msbt>
     public void Build(GameFile malsArchive, Stream output)
     {
         string vanillaMalsArchivePath = malsArchive.GetVanilla();
+
+        using FileStream fs = File.OpenRead(vanillaMalsArchivePath);
+        using SpanOwner<byte> vanillaMalsArchiveBuffer =
+            SpanOwner<byte>.Allocate(Convert.ToInt32(fs.Length));
+        fs.Read(vanillaMalsArchiveBuffer.Span);
+
+        using ArraySegmentOwner<byte> vanillaMalsArchiveDecompressedBuffer =
+            ArraySegmentOwner<byte>.Allocate(vanillaMalsArchiveBuffer.Span.GetZsDecompressedSize());
+        vanillaMalsArchiveBuffer.Span.ZsDecompress(vanillaMalsArchiveDecompressedBuffer.Segment, out int dictionaryId);
+
         Sarc vanillaMalsArchive = Sarc.FromBinary(
-            ZstdHelper.Decompress(
-                File.ReadAllBytes(vanillaMalsArchivePath), vanillaMalsArchivePath));
+            vanillaMalsArchiveDecompressedBuffer.Segment
+        );
 
         foreach ((var msbtPath, var msbt) in this) {
-            if (!vanillaMalsArchive.TryGetValue(msbtPath, out byte[]? msbtData)) {
+            if (!vanillaMalsArchive.TryGetValue(msbtPath, out ArraySegment<byte> msbtData)) {
                 WriteMsbtIntoMals(msbtPath, msbt);
                 continue;
             }
@@ -98,8 +111,8 @@ public class MalsChangelog : Dictionary<string, Msbt>
         using MemoryStream malsBinaryStream = new();
         vanillaMalsArchive.Write(malsBinaryStream);
 
-        Span<byte> mergedMalsArchiveData = ZstdHelper.Compress(
-            malsBinaryStream.ToArray(), vanillaMalsArchivePath);
+        Span<byte> mergedMalsArchiveData = ZstdExtension.ZsCompress(
+            malsBinaryStream.ToArray(), dictionaryId);
         output.Write(mergedMalsArchiveData);
     }
 }

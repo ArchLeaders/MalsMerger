@@ -5,6 +5,7 @@ using Standart.Hash.xxHash;
 using System.Buffers.Binary;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Totk.Common.Extensions;
 
 namespace MalsMerger.Core.Helpers;
 
@@ -54,7 +55,7 @@ public static class MalsChecksumHelper
         bool isNotGameVersion = malsArchiveFile.Version == TotkConfig.Shared.Version;
 
         if (!_malsFiles.TryGetValue(malsArchiveFile.Name, out Sarc? mals)) {
-            Span<byte> buffer = ZstdHelper.Decompress(malsArchiveFile.GetVanilla());
+            byte[] buffer = ZstdExtension.ZsDecompress(File.ReadAllBytes(malsArchiveFile.GetVanilla()));
             mals = _malsFiles[malsArchiveFile.Name] = Sarc.FromBinary(buffer);
         }
 

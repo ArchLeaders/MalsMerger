@@ -1,6 +1,7 @@
 ﻿using MalsMerger.Core.Extensions;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Totk.Common.Extensions;
 
 namespace MalsMerger.Core;
 
@@ -22,11 +23,18 @@ public class TotkConfig
     public static TotkConfig Load()
     {
         if (!File.Exists(_path)) {
-            return Create();
+            throw new FileNotFoundException($"""
+                TotK config file not found: '{_path}'
+                """);
         }
 
         using FileStream fs = File.OpenRead(_path);
-        return JsonSerializer.Deserialize(fs, TotkConfigSerializerContext.Default.TotkConfig) ?? Create();
+        TotkConfig result = JsonSerializer.Deserialize(fs, TotkConfigSerializerContext.Default.TotkConfig)
+            ?? throw new InvalidOperationException("""
+                Error parsing TotK config: the deserialized value was null
+                """);
+        ZstdExtension.LoadDictionaries(result.ZsDicPath);
+        return result;
     }
 
     public void Save()
@@ -34,16 +42,6 @@ public class TotkConfig
         Directory.CreateDirectory(Path.GetDirectoryName(_path)!);
         using FileStream fs = File.Create(_path);
         JsonSerializer.Serialize(fs, this, TotkConfigSerializerContext.Default.TotkConfig);
-    }
-
-    private static TotkConfig Create()
-    {
-        TotkConfig config = new() {
-            GamePath = string.Empty
-        };
-
-        config.Save();
-        return config;
     }
 }
 
