@@ -2,6 +2,7 @@
 using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MessageStudio.Formats.BinaryText;
+using Microsoft.IO;
 using Revrs;
 using Revrs.Buffers;
 using SarcLibrary;
@@ -14,6 +15,12 @@ public class MalsChangelog : Dictionary<string, Msbt>
 {
     private static readonly MsbtOptions _msbtOptions = new() {
         DuplicateKeyMode = MsbtDuplicateKeyMode.UseLastOccurrence
+    };
+
+    private static readonly RecyclableMemoryStreamManager _memoryStreamManager = new() {
+        Settings = {
+            AggressiveBufferReturn = true
+        }
     };
 
     /// <summary>
@@ -108,12 +115,13 @@ public class MalsChangelog : Dictionary<string, Msbt>
             }
         }
 
-        using MemoryStream malsBinaryStream = new();
+        using RecyclableMemoryStream malsBinaryStream = new(_memoryStreamManager);
         vanillaMalsArchive.Write(malsBinaryStream);
+        ReadOnlySpan<byte> malsBuffer = malsBinaryStream.GetSpan();
 
-        Span<byte> mergedMalsArchiveData = ZstdExtension.ZsCompress(
-            malsBinaryStream.ToArray(), dictionaryId);
-        output.Write(mergedMalsArchiveData);
+        using SpanOwner<byte> compressedBuffer = SpanOwner<byte>.Allocate(malsBuffer.Length);
+        int compressedSize = malsBuffer.ZsCompress(compressedBuffer.Span, dictionaryId);
+        output.Write(compressedBuffer.Span[..compressedSize]);
     }
 }
 
