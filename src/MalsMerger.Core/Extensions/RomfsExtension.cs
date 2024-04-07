@@ -24,17 +24,23 @@ public static class RomfsExtension
 
     public static IEnumerable<GameFile> GetMalsArchives(this string romfsFolder, string? localization)
     {
+        string malsFolder = Path.Combine(romfsFolder, "Mals");
+
+        if (!Directory.Exists(malsFolder)) {
+            return [];
+        }
+
         if (localization is null) {
             // Return all of the Mals file to be merged
             return Directory
-                .EnumerateFiles(Path.Combine(romfsFolder, "Mals"))
+                .EnumerateFiles(malsFolder)
                 .Select(x => new GameFile(x, romfsFolder))
                 .OrderByDescending(x => x.Version)
                 .DistinctBy(x => x.NamePrefix);
         }
 
         string[] malsPaths = Directory
-            .GetFiles(Path.Combine(romfsFolder, "Mals"));
+            .GetFiles(malsFolder);
 
         if (malsPaths.Length == 0) {
             return [];

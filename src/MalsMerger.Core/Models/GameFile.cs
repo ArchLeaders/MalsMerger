@@ -7,7 +7,7 @@ public partial class GameFile
     /// <summary>
     /// The root folder (romfs) the file belongs too.
     /// </summary>
-    private string _romfs;
+    private readonly string _romfs;
 
     /// <summary>
     /// The game version if it's found in the file name.
