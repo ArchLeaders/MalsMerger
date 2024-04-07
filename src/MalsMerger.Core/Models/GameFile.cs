@@ -43,8 +43,11 @@ public partial class GameFile
             : Path.GetDirectoryName(Path.GetRelativePath(romfs, file)) ?? string.Empty;
 
         string[] trackedFileParts = VersionPattern().Split(NamePostfix);
-        if (trackedFileParts.Length != 3 | !int.TryParse(trackedFileParts[1], out int version)) {
-            // TODO: What the heck?
+        if (trackedFileParts.Length != 3 || !int.TryParse(trackedFileParts[1], out int version)) {
+            throw new InvalidOperationException($"""
+                Invalid Mals file name: '{file}'
+                Make sure there are no loose files in the Mals directory.
+                """);
         }
 
         Version = version;
