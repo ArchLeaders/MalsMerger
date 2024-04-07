@@ -2,7 +2,6 @@
 using MalsMerger.Core.Extensions;
 using MalsMerger.Core.Helpers;
 using MessageStudio.Formats.BinaryText;
-using Microsoft.IO;
 using Revrs;
 using Revrs.Buffers;
 using SarcLibrary;
@@ -15,12 +14,6 @@ public class MalsChangelog : Dictionary<string, Msbt>
 {
     private static readonly MsbtOptions _msbtOptions = new() {
         DuplicateKeyMode = MsbtDuplicateKeyMode.UseLastOccurrence
-    };
-
-    private static readonly RecyclableMemoryStreamManager _memoryStreamManager = new() {
-        Settings = {
-            AggressiveBufferReturn = true
-        }
     };
 
     /// <summary>
@@ -97,7 +90,8 @@ public class MalsChangelog : Dictionary<string, Msbt>
 
         foreach ((var msbtPath, var msbt) in this) {
             if (!vanillaMalsArchive.TryGetValue(msbtPath, out ArraySegment<byte> msbtData)) {
-                WriteMsbtIntoMals(msbtPath, msbt);
+                vanillaMalsArchive[msbtPath]
+                    = msbt.ToBinary(msbt.Encoding, msbt.Endianness);
                 continue;
             }
 
@@ -106,18 +100,13 @@ public class MalsChangelog : Dictionary<string, Msbt>
                 vanillaMsbt[label] = entry;
             }
 
-            WriteMsbtIntoMals(msbtPath, vanillaMsbt);
-
-            void WriteMsbtIntoMals(string msbtPath, Msbt msbt)
-            {
-                vanillaMalsArchive[msbtPath]
-                    = msbt.ToBinary(msbt.Encoding, msbt.Endianness);
-            }
+            vanillaMalsArchive[msbtPath]
+                = msbt.ToBinary(vanillaMsbt.Encoding, vanillaMsbt.Endianness);
         }
 
-        using RecyclableMemoryStream malsBinaryStream = new(_memoryStreamManager);
+        using MemoryStream malsBinaryStream = new();
         vanillaMalsArchive.Write(malsBinaryStream);
-        ReadOnlySpan<byte> malsBuffer = malsBinaryStream.GetSpan();
+        ReadOnlySpan<byte> malsBuffer = malsBinaryStream.ToArray();
 
         using SpanOwner<byte> compressedBuffer = SpanOwner<byte>.Allocate(malsBuffer.Length);
         int compressedSize = malsBuffer.ZsCompress(compressedBuffer.Span, dictionaryId);

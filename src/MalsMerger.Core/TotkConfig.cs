@@ -15,10 +15,10 @@ public class TotkConfig
     public required string GamePath { get; set; }
 
     [JsonIgnore]
-    public string ZsDicPath => Path.Combine(GamePath, "Pack", "ZsDic.pack.zs");
+    public string ZsDicPath { get; private set; } = string.Empty;
 
     [JsonIgnore]
-    public int Version => GamePath.GetVersion();
+    public int Version { get; private set; }
 
     public static TotkConfig Load()
     {
@@ -33,7 +33,11 @@ public class TotkConfig
             ?? throw new InvalidOperationException("""
                 Error parsing TotK config: the deserialized value was null
                 """);
+
+        result.ZsDicPath = Path.Combine(result.GamePath, "Pack", "ZsDic.pack.zs");
+        result.Version = result.GamePath.GetVersion();
         ZstdExtension.LoadDictionaries(result.ZsDicPath);
+        ZstdExtension.CompressionLevel = 3;
         return result;
     }
 

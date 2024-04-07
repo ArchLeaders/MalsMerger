@@ -47,7 +47,8 @@ public class Merger
 
     public void Merge()
     {
-        foreach ((var malsArchiveFile, var changelog) in _changelogs.Select(x => (new GameFile(x.Key, "sarc.zs", "Mals"), x.Value))) {
+        foreach ((var malsArchiveFilePath, var changelog) in _changelogs) {
+            GameFile malsArchiveFile = new(malsArchiveFilePath, "sarc.zs", "Mals");
             string malsArchivePath = malsArchiveFile.BuildOutput(_output);
             Console.WriteLine($"@{malsArchivePath}");
             using FileStream fs = File.Create(malsArchivePath);

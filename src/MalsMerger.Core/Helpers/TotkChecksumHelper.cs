@@ -1,5 +1,7 @@
-﻿using MalsMerger.Core.Models;
+﻿using CommunityToolkit.HighPerformance.Buffers;
+using MalsMerger.Core.Models;
 using Standart.Hash.xxHash;
+using System.Collections.Frozen;
 using System.Runtime.InteropServices;
 
 namespace MalsMerger.Core.Helpers;
@@ -7,7 +9,26 @@ namespace MalsMerger.Core.Helpers;
 public static class TotkChecksumHelper
 {
     private static readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Totk", "checksums.bin");
-    private static readonly byte[] _buffer = File.ReadAllBytes(_path);
+    private static readonly FrozenDictionary<ulong, ulong> _lookup;
+
+    static TotkChecksumHelper()
+    {
+        using FileStream fs = File.OpenRead(_path);
+        int size = Convert.ToInt32(fs.Length);
+        using SpanOwner<byte> buffer = SpanOwner<byte>.Allocate(size);
+        fs.Read(buffer.Span);
+
+        Span<ulong> values = MemoryMarshal.Cast<byte, ulong>(buffer.Span);
+        int count = values.Length / 2;
+        Span<ulong> half = values[..count];
+
+        Dictionary<ulong, ulong> lookup = new(count);
+        for (int i = 0; i < count; i++) {
+            lookup[values[i]] = half[i];
+        }
+
+        _lookup = FrozenDictionary.ToFrozenDictionary(lookup);
+    }
 
     public static bool IsVanilla(this Span<byte> buffer, GameFile malsArchivePath)
     {
@@ -28,19 +49,12 @@ public static class TotkChecksumHelper
 
     public static ulong GetChecksum(string key, int version)
     {
-        Span<ulong> cast = MemoryMarshal.Cast<byte, ulong>(_buffer);
-        int half = cast.Length / 2;
-
-        int index;
-        if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash($"{key}#{version}"))) > -1)
-        {
-            return cast[half..][index];
-        }
-        else if ((index = cast[..half].BinarySearch(xxHash64.ComputeHash(key))) > -1)
-        {
-            return cast[half..][index];
-        }
-
-        return ulong.MinValue;
+        return _lookup.TryGetValue(xxHash64.ComputeHash($"{key}#{version}"), out ulong hash) switch {
+            true => hash,
+            false => _lookup.TryGetValue(xxHash64.ComputeHash($"{key}#{version}"), out hash) switch {
+                true => hash,
+                false => ulong.MinValue
+            }
+        };
     }
 }
