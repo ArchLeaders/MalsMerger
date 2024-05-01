@@ -2,11 +2,14 @@
 using MalsMerger.Core.Helpers;
 using MalsMerger.Core.Models;
 using System.Text.Json;
+using TotkCommon;
 
 namespace MalsMerger.Core;
 
 public class Merger
 {
+    public static readonly int GameVersion = Totk.Config.GamePath.GetVersion();
+
     private readonly Dictionary<string, MalsChangelog> _changelogs = [];
     private readonly string _output;
 
@@ -39,7 +42,7 @@ public class Merger
                 Print($"Found Mals Archive '{inputFile.Name}'...", LogLevel.Info);
 
                 changelog.Append(inputFile, File.ReadAllBytes(
-                    inputFile.GetBestMatch(TotkConfig.Shared.Version))
+                    inputFile.GetBestMatch(GameVersion))
                 );
             }
         }

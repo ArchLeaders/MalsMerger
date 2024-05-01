@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using TotkCommon;
 
 namespace MalsMerger.Core.Models;
 
@@ -62,7 +63,7 @@ public partial class GameFile
         _romfs = string.Empty;
 
         Folder = folder;
-        Version = TotkConfig.Shared.Version;
+        Version = Merger.GameVersion;
     }
 
     public string BuildOutput(string outputFolder)
@@ -85,7 +86,7 @@ public partial class GameFile
 
     public string GetVanilla(int targetVersion)
     {
-        return GetBestMatch(targetVersion, TotkConfig.Shared.GamePath);
+        return GetBestMatch(targetVersion, Totk.Config.GamePath);
     }
 
     public string GetBestMatch(int targetVersion)

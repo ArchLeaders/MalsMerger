@@ -13,11 +13,8 @@
   <ItemGroup>
     <PackageReference Include="MessageStudio" Version="1.1.0" />
     <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="3.0.0" />
-    <PackageReference Include="Revrs" Version="1.0.5" />
-    <PackageReference Include="SarcLibrary" Version="3.1.2" />
     <PackageReference Include="Standart.Hash.xxHash" Version="4.0.5" />
-    <PackageReference Include="Totk.Common" Version="1.1.2" />
-    <PackageReference Include="ZstdSharp.Port" Version="0.8.0" />
+    <PackageReference Include="TotkCommon" Version="1.2.0" />
   </ItemGroup>
 
   <ItemGroup>

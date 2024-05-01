@@ -6,7 +6,7 @@ using Revrs;
 using Revrs.Buffers;
 using SarcLibrary;
 using System.Text.Json.Serialization;
-using Totk.Common.Extensions;
+using TotkCommon;
 
 namespace MalsMerger.Core.Models;
 
@@ -23,7 +23,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
     /// <param name="malsArchiveData"></param>
     public void Append(GameFile malsArchiveFile, byte[] malsArchiveData)
     {
-        RevrsReader reader = new(ZstdExtension.ZsDecompress(malsArchiveData));
+        RevrsReader reader = new(Totk.Zstd.Decompress(malsArchiveData));
         ImmutableSarc malsArchive = new(ref reader);
 
         foreach ((var msbtFile, var msbtData) in malsArchive) {
@@ -81,8 +81,8 @@ public class MalsChangelog : Dictionary<string, Msbt>
         fs.Read(vanillaMalsArchiveBuffer.Span);
 
         using ArraySegmentOwner<byte> vanillaMalsArchiveDecompressedBuffer =
-            ArraySegmentOwner<byte>.Allocate(vanillaMalsArchiveBuffer.Span.GetZsDecompressedSize());
-        vanillaMalsArchiveBuffer.Span.ZsDecompress(vanillaMalsArchiveDecompressedBuffer.Segment, out int dictionaryId);
+            ArraySegmentOwner<byte>.Allocate(Zstd.GetDecompressedSize(vanillaMalsArchiveBuffer.Span));
+        Totk.Zstd.Decompress(vanillaMalsArchiveBuffer.Span, vanillaMalsArchiveDecompressedBuffer.Segment, out int dictionaryId);
 
         Sarc vanillaMalsArchive = Sarc.FromBinary(
             vanillaMalsArchiveDecompressedBuffer.Segment
@@ -109,7 +109,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
         ReadOnlySpan<byte> malsBuffer = malsBinaryStream.ToArray();
 
         using SpanOwner<byte> compressedBuffer = SpanOwner<byte>.Allocate(malsBuffer.Length);
-        int compressedSize = malsBuffer.ZsCompress(compressedBuffer.Span, dictionaryId);
+        int compressedSize = Totk.Zstd.Compress(malsBuffer, compressedBuffer.Span, dictionaryId);
         output.Write(compressedBuffer.Span[..compressedSize]);
     }
 }
