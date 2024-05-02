@@ -34,7 +34,11 @@ public class MalsChangelog : Dictionary<string, Msbt>
             Msbt msbt = Msbt.FromBinary(msbtData, _msbtOptions);
 
             TryGetValue(msbtFile, out Msbt? currentMsbt);
-            this[msbtFile] = Merge(msbt, currentMsbt ?? [], msbtFile);
+            Msbt merged = Merge(msbt, currentMsbt ?? [], msbtFile);
+
+            if (merged.Count > 0) {
+                this[msbtFile] = merged;
+            }
         }
 
         Msbt Merge(Msbt msbtA, Msbt msbtB, string msbtPath)
