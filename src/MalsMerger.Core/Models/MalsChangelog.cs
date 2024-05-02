@@ -26,8 +26,10 @@ public class MalsChangelog : Dictionary<string, Msbt>
         RevrsReader reader = new(Totk.Zstd.Decompress(malsArchiveData));
         ImmutableSarc malsArchive = new(ref reader);
 
-        foreach ((var msbtFile, var msbtData) in malsArchive) {
-            if (!msbtData.IsMsbtFile() || msbtData.IsVanilla(malsArchiveFile, msbtFile)) {
+        foreach ((var msbtFile, var msbtData) in malsArchive)
+        {
+            if (!msbtData.IsMsbtFile() || msbtData.IsVanilla(malsArchiveFile, msbtFile))
+            {
                 continue;
             }
 
@@ -36,15 +38,18 @@ public class MalsChangelog : Dictionary<string, Msbt>
             TryGetValue(msbtFile, out Msbt? currentMsbt);
             Msbt merged = Merge(msbt, currentMsbt ?? [], msbtFile);
 
-            if (merged.Count > 0) {
+            if (merged.Count > 0)
+            {
                 this[msbtFile] = merged;
             }
         }
 
         Msbt Merge(Msbt msbtA, Msbt msbtB, string msbtPath)
         {
-            foreach ((var label, var entry) in msbtA) {
-                if (!entry.IsVanilla(malsArchiveFile, msbtPath, label)) {
+            foreach ((var label, var entry) in msbtA)
+            {
+                if (!entry.IsVanilla(malsArchiveFile, msbtPath, label))
+                {
                     msbtB[label] = entry;
                 }
             }
@@ -59,13 +64,16 @@ public class MalsChangelog : Dictionary<string, Msbt>
     /// <param name="changelog">The <see cref="MalsChangelog"/> to merge with the current instance.</param>
     public void Append(MalsChangelog changelog)
     {
-        foreach ((var msbtPath, var msbt) in changelog) {
-            if (!TryGetValue(msbtPath, out Msbt? currentMsbt)) {
+        foreach ((var msbtPath, var msbt) in changelog)
+        {
+            if (!TryGetValue(msbtPath, out Msbt? currentMsbt))
+            {
                 this[msbtPath] = msbt;
                 continue;
             }
 
-            foreach ((var label, var entry) in msbt) {
+            foreach ((var label, var entry) in msbt)
+            {
                 currentMsbt[label] = entry;
             }
         }
@@ -92,15 +100,18 @@ public class MalsChangelog : Dictionary<string, Msbt>
             vanillaMalsArchiveDecompressedBuffer.Segment
         );
 
-        foreach ((var msbtPath, var msbt) in this) {
-            if (!vanillaMalsArchive.TryGetValue(msbtPath, out ArraySegment<byte> msbtData)) {
+        foreach ((var msbtPath, var msbt) in this)
+        {
+            if (!vanillaMalsArchive.TryGetValue(msbtPath, out ArraySegment<byte> msbtData))
+            {
                 vanillaMalsArchive[msbtPath]
                     = msbt.ToBinary(msbt.Encoding, msbt.Endianness);
                 continue;
             }
 
             Msbt vanillaMsbt = Msbt.FromBinary(msbtData, _msbtOptions);
-            foreach ((var label, var entry) in msbt) {
+            foreach ((var label, var entry) in msbt)
+            {
                 vanillaMsbt[label] = entry;
             }
 
