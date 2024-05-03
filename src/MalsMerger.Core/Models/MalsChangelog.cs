@@ -116,7 +116,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
             }
 
             vanillaMalsArchive[msbtPath]
-                = msbt.ToBinary(vanillaMsbt.Encoding, vanillaMsbt.Endianness);
+                = vanillaMsbt.ToBinary(vanillaMsbt.Encoding, vanillaMsbt.Endianness);
         }
 
         using MemoryStream malsBinaryStream = new();
