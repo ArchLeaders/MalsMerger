@@ -55,7 +55,7 @@ if (flags.TryGet(out string? logFile, "l", "log") && logFile is not null) {
 bool isMerge = command is "merge" or "merge-mods";
 
 // Get target localization
-string? localization = flags.Get<string?>(null, "t", "target", "l", "localization");
+string? localization = flags.Get<string?>(null, "t", "target", "lc", "localization");
 if (isMerge && localization?.TryParseLocalization(out _, out _) == false) {
     Print($"Could not parse localization target: '{localization}'", LogLevel.Error);
     return;
