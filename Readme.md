@@ -6,6 +6,10 @@ Simple CLI tool for merging TotK `Mals` archives
 
 ---
 
+https://github.com/ArchLeaders/MalsMerger/assets/80713508/2df95cf0-046c-4243-bb9a-b1573ebad44a
+
+---
+
 - [Mals Merger](#mals-merger)
 - [Usage](#usage)
 - [Commands](#commands)
