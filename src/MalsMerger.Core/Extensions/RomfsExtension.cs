@@ -4,6 +4,8 @@ namespace MalsMerger.Core.Extensions;
 
 public static class RomfsExtension
 {
+    private const string SEARCH_PATTERN = "*.Product.*.*";
+
     public static int GetVersion(this string romfsFolder, int @default = 100)
     {
         string regionLangMask = Path.Combine(romfsFolder, "System", "RegionLangMask.txt");
@@ -33,14 +35,14 @@ public static class RomfsExtension
         if (localization is null) {
             // Return all of the Mals file to be merged
             return Directory
-                .EnumerateFiles(malsFolder)
+                .EnumerateFiles(malsFolder, SEARCH_PATTERN, SearchOption.TopDirectoryOnly)
                 .Select(x => new GameFile(x, romfsFolder))
                 .OrderByDescending(x => x.Version)
                 .DistinctBy(x => x.NamePrefix);
         }
 
         string[] malsPaths = Directory
-            .GetFiles(malsFolder);
+            .GetFiles(malsFolder, SEARCH_PATTERN, SearchOption.TopDirectoryOnly);
 
         if (malsPaths.Length == 0) {
             return [];
