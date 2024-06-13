@@ -50,10 +50,11 @@ public class Merger
 
     public void Merge()
     {
+        Directory.CreateDirectory(Path.Combine(_output, "Mals"));
+
         foreach ((var malsArchiveFilePath, var changelog) in _changelogs) {
             GameFile malsArchiveFile = new(malsArchiveFilePath, "sarc.zs", "Mals");
             string malsArchivePath = malsArchiveFile.BuildOutput(_output);
-            Console.WriteLine($"@{malsArchivePath}");
             using FileStream fs = File.Create(malsArchivePath);
             changelog.Build(malsArchiveFile, fs);
         }

@@ -68,10 +68,16 @@ public partial class GameFile
 
     public string BuildOutput(string outputFolder)
     {
-        string folder = Path.Combine(outputFolder, Folder);
-        Directory.CreateDirectory(folder);
+        ArgumentNullException.ThrowIfNull(Totk.AddressTable, nameof(Totk.AddressTable));
 
-        return Path.Combine(folder, Name);
+        string ext = NamePostfix.AsSpan()[^3..] switch {
+            ".zs" => NamePostfix[..^3],
+            _ => NamePostfix
+        };
+
+        return Path.Combine(outputFolder, Totk.AddressTable
+            .GetValueOrDefault($"{Folder}/{NamePrefix}.{ext}", $"{Folder}/{NamePrefix}.{Version}.{ext}") + ".zs"
+        );
     }
 
     public string GetPath()
