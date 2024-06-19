@@ -6,7 +6,7 @@ namespace MalsMerger.Core.Helpers;
 
 public static class TotkChecksumHelper
 {
-    private static readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Totk", "checksums.bin");
+    private static readonly string _path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "totk", "checksums.bin");
     private static readonly TotkChecksums _checksums;
 
     static TotkChecksumHelper()
