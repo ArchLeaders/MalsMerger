@@ -32,6 +32,7 @@ string[] inputs = args[1]
         return x;
     })
     .Where(x => Directory.Exists(Path.Combine(x, "Mals")))
+    .Reverse()
     .ToArray();
 string output = args[2];
 

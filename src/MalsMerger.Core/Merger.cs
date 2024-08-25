@@ -17,10 +17,6 @@ public class Merger
     {
         Directory.CreateDirectory(_output = output);
 
-        // Reverse the inputs to match
-        // left > right priority
-        Array.Reverse(inputs);
-
         foreach (var inputFile in inputs.SelectMany(x => x.GetMalsArchives(localization))) {
             string key = localization is not null
                 ? $"{localization}.Product" : inputFile.NamePrefix;
