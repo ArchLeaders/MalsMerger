@@ -60,9 +60,9 @@ public static class MalsChecksumHelper
             mals = _malsFiles[malsArchiveFile.Name] = Sarc.FromBinary(buffer);
         }
 
-        if (isNotGameVersion && malsArchiveFile.Version is int version) {
-            string key = Path.Combine(malsArchiveFile.NamePrefix ?? malsArchiveFile.Name, msbtFile, label).Replace('\\', '/');
-            if ((checksum = GetChecksum(xxHash64.ComputeHash(key), (ushort)version)) != ulong.MinValue) {
+        if (isNotGameVersion) {
+            string key = Path.Combine(malsArchiveFile.NamePrefix, msbtFile, label).Replace('\\', '/');
+            if ((checksum = GetChecksum(xxHash64.ComputeHash(key), (ushort)malsArchiveFile.Version)) != ulong.MinValue) {
                 return null;
             }
         }

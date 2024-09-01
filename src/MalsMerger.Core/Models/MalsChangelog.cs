@@ -82,6 +82,7 @@ public class MalsChangelog : Dictionary<string, Msbt>
     /// <summary>
     /// Build a <see cref="GameFile"/> from the current <see cref="MalsChangelog"/> and write it to the <paramref name="output"/>.
     /// </summary>
+    /// <param name="malsArchive"></param>
     /// <param name="output">The output stream to write the Mals archive.</param>
     public void Build(GameFile malsArchive, Stream output)
     {

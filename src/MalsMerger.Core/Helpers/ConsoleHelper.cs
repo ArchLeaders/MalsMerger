@@ -5,7 +5,7 @@ namespace MalsMerger.Core.Helpers;
 
 public enum LogLevel
 {
-    None, OK, Info, Warning, Error
+    None, Ok, Info, Warning, Error
 }
 
 public static class ConsoleHelper
@@ -21,16 +21,16 @@ public static class ConsoleHelper
         """;
 
     public static bool Verbose { get; set; } = false;
-    public static StreamWriter? LogFile { get; set; } = null;
+    public static StreamWriter? LogFile { get; set; }
 
     public static void PrintTriforce(string title, ConsoleColor color = ConsoleColor.Blue)
     {
         StringBuilder sb = new("\n");
 
-        double width = 17;
+        const double width = 17;
         int len = title.Length + 8;
 
-        if (len == width) {
+        if (len == (int)width) {
             string line = PADDING + new string('_', len);
             sb.AppendLine(TRIFORCE_ASCII.Replace("*", string.Empty));
             sb.AppendLine(line);
@@ -79,23 +79,27 @@ public static class ConsoleHelper
 
     public static void Print(object obj, LogLevel level = LogLevel.None)
     {
-        if (level == LogLevel.None) {
-            Print(obj.ToString() ?? string.Empty);
-        }
-        else if (level == LogLevel.Info) {
-            Console.ForegroundColor = ConsoleColor.Blue;
-            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
-        }
-        else if (level == LogLevel.OK && Verbose) {
-            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
-        }
-        else if (level == LogLevel.Warning) {
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
-        }
-        else if (level == LogLevel.Error) {
-            Console.ForegroundColor = ConsoleColor.Red;
-            LogError(obj);
+        switch (level) {
+            case LogLevel.None:
+                Print(obj.ToString() ?? string.Empty);
+                break;
+            case LogLevel.Info:
+                Console.ForegroundColor = ConsoleColor.Blue;
+                Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
+                break;
+            case LogLevel.Ok when Verbose:
+                Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
+                break;
+            case LogLevel.Warning:
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Print($"[{level}] [{DateTime.Now:g}] -> {obj}");
+                break;
+            case LogLevel.Error:
+                Console.ForegroundColor = ConsoleColor.Red;
+                LogError(obj);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(level), level, null);
         }
 
         Console.ResetColor();
@@ -111,7 +115,7 @@ public static class ConsoleHelper
     private static void LogError(object obj)
     {
         string header = $"[ERROR] [{DateTime.Now:g}] -> ";
-        string padding = $"\n{PADDING}";
+        const string padding = $"\n{PADDING}";
         Print(header + obj.ToString()?.Replace("\n", padding));
     }
 }
