@@ -5,6 +5,7 @@ namespace MalsMerger.Core.Extensions;
 public static class RomfsExtension
 {
     private const string SEARCH_PATTERN = "*.Product.*.*";
+    private const string DEFAULT_LOCALIZATION = "USen";
 
     public static int GetVersion(this string romfsFolder, int @default = 100)
     {
@@ -33,7 +34,7 @@ public static class RomfsExtension
         }
 
         if (localization is null) {
-            // Return all of the Mals file to be merged
+            // Return all the Mals file to be merged
             return Directory
                 .EnumerateFiles(malsFolder, SEARCH_PATTERN, SearchOption.TopDirectoryOnly)
                 .Select(x => new GameFile(x, romfsFolder))
@@ -44,25 +45,25 @@ public static class RomfsExtension
         string[] malsPaths = Directory
             .GetFiles(malsFolder, SEARCH_PATTERN, SearchOption.TopDirectoryOnly);
 
-        if (malsPaths.Length == 0) {
-            return [];
+        switch (malsPaths.Length) {
+            case 0:
+                return [];
+            case 1:
+                return [
+                    new GameFile(malsPaths[0], romfsFolder)
+                ];
+            default: {
+                string match =
+                    malsPaths.FirstOrDefault(x => MatchesRegion(x, localization) && MatchesLang(x, localization)) ??
+                    malsPaths.FirstOrDefault(x => MatchesLang(x, localization)) ??
+                    malsPaths.FirstOrDefault(x => MatchesLang(x, DEFAULT_LOCALIZATION)) ??
+                    malsPaths.First();
+
+                return [
+                    new GameFile(match, romfsFolder)
+                ];
+            }
         }
-
-        if (malsPaths.Length == 1) {
-            return [
-                new(malsPaths[0], romfsFolder)
-            ];
-        }
-
-        string match =
-            malsPaths.FirstOrDefault(x => MatchesRegion(x, localization) && MatchesLang(x, localization)) ??
-            malsPaths.FirstOrDefault(x => MatchesLang(x, localization)) ??
-            malsPaths.FirstOrDefault(x => MatchesRegion(x, localization)) ??
-            malsPaths.First();
-
-        return [
-            new(match, romfsFolder)
-        ];
     }
 
     public static bool IsMsbtFile(this Span<byte> data)
